@@ -195,3 +195,4 @@ pa6/parser.hpp
 pa6/out.zom
 pa4/out.result
 pa7/log.txt
+*.db
