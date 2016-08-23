@@ -10,7 +10,7 @@ gitremote=$(git config --get remote.origin.url)
 #echo "$gitremote"
 
 # Extract username
-username=${gitremote%@*}
+username=${gitremote%/*}
 username=${username##*/}
 #echo "$username"
 
