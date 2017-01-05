@@ -1,4 +1,4 @@
-# ITP 435 Labs - Fall 2016 #
+# ITP 435 Assignments - Spring 2017 #
 
 ### PUT YOUR INFO HERE ###
 Name: Tommy Trojan
