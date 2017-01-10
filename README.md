@@ -1,8 +1,8 @@
 # ITP 435 Assignments - Spring 2017 #
 
 ### PUT YOUR INFO HERE ###
-Name: Tommy Trojan
+Name: Justin Yong Jia Tan
 
-Email: ttrojan@usc.edu
+Email: yongjiat@usc.edu
 
-Platform: (PC or Mac)
+Platform: Mac
