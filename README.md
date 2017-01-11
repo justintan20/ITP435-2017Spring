@@ -5,4 +5,4 @@ Name: Justin Yong Jia Tan
 
 Email: yongjiat@usc.edu
 
-Platform: Mac
+Platform: Mac OS
