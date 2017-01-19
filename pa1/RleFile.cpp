@@ -6,92 +6,99 @@
 #include <iomanip>
 #include "FileSystem.h"
 
-void RleFile::CreateArchive(const std::string& source)
-{
-	// TODO
-    // Requires <fstream>
+void RleFile::CreateArchive(const std::string& source){
+    //initialize variables to store size and data
     std::ifstream::pos_type size;
     char* memblock;
     // Open the file for input, in binary mode, and start ATE (at the end)
     std::ifstream file (source, std::ios::in|std::ios::binary|std::ios::ate);
+    //check if file is open
     if (file.is_open())
     {
-        std::cout << "File opened." << std::endl;
+        std::cout << "File opened: " << source << std::endl;
         size = file.tellg(); // Save the size of the file
         memblock = new char [static_cast<unsigned int>(size)];
         file.seekg (0, std::ios::beg); // Seek back to start of file
         file.read (memblock, size);
         file.close();
         // File data has now been loaded into memblock array
-        unsigned int sizeBefore = static_cast<unsigned int>(size);
+        //set mHeader variables accordingly
         mHeader.fileNameLength = source.length();
-        mHeader.fileSize = sizeBefore;
+        mHeader.fileSize = static_cast<unsigned int>(size);
         mHeader.sig[0] = 'R';
         mHeader.sig[1] = 'L';
         mHeader.sig[2] = 'E';
         mHeader.sig[3] = '\x01';
         mHeader.fileName = source;
-        mData.Compress(memblock, sizeBefore);
+        //compress data
+        mData.Compress(memblock, mHeader.fileSize);
+        std::cout << "Compression successful!" << std::endl;
+        //clean up
+        delete[] memblock;
         double percent = mData.mSize / (double)size * 100;
         std::cout << "Resulted in a " << percent << "% compression." << std::endl;
         std::ofstream arc(source + ".rl1", std::ios::out|std::ios::binary|std::ios::trunc);
         if (arc.is_open())
         {
             // Use arc.write function to write data here
+            //first write header info
             arc.write(mHeader.sig, 4);
             arc.write(reinterpret_cast<char*>(&(mHeader.fileSize)), 4);
             arc.write(reinterpret_cast<char*>(&(mHeader.fileNameLength)), 1);
             arc.write(mHeader.fileName.c_str(),mHeader.fileNameLength);
+            //then write actual compressed data
             arc.write(mData.mData, mData.mSize);
         }
-        // Make sure to clean up!
-        delete[] memblock;
+    }
+    //tell user if file did not open
+    else{
+        std::cout << "File does not exist!" << std::endl;
     }
 }
 
-void RleFile::ExtractArchive(const std::string& source)
-{
-	// TODO
-    // Requires <fstream>
-    mData.~RleData();
+void RleFile::ExtractArchive(const std::string& source){
+    //initialize variables
     std::ifstream::pos_type size;
     char* memblock;
     // Open the file for input, in binary mode, and start ATE (at the end)
     std::ifstream file (source, std::ios::in|std::ios::binary|std::ios::ate);
-    if (file.is_open())
-    {
-        std::cout << "File opened." << std::endl;
+    //check if file is open
+    if (file.is_open()){
+        std::cout << "File opened: " << source << std::endl;
         size = file.tellg(); // Save the size of the file
         memblock = new char [static_cast<unsigned int>(size)];
         file.seekg (0, std::ios::beg); // Seek back to start of file
         file.read (memblock, size);
         file.close();
-        std::cout << "File read." << std::endl;
         // File data has now been loaded into memblock array
+        //check header to see if file is valid
         if (memblock[0] != 'R' || memblock[1] != 'L' || memblock[2] != 'E' || memblock[3] != '\x01'){
             std::cout << "Invalid archive!" << std::endl;
         }
         else{
-            std::cout << "valid data" <<std::endl;
+            //set mHeader variables
             mHeader.sig[0] = 'R';
             mHeader.sig[1] = 'L';
             mHeader.sig[2] = 'E';
             mHeader.sig[3] = '\x01';
             mHeader.fileSize = *(reinterpret_cast<int*>(&memblock[4]));
-            std::cout << "filesize loaded." << mHeader.fileSize << std::endl;
             mHeader.fileNameLength = memblock[8];
-            std::cout << "filename length found." << std::endl;
             for (int i = 0; i < mHeader.fileNameLength; i++){
                 mHeader.fileName = mHeader.fileName + memblock[9 + i];
             }
-            std::cout << "filename loaded. " << mHeader.fileName << std::endl;
+            //created new char array storing compressed data
             char* compressed = new char[static_cast<unsigned int>(size) - 9 - mHeader.fileNameLength];
+            //store into helper char array
             for (int j = 0; j < static_cast<unsigned int>(size) - 9 - mHeader.fileNameLength; j++){
                 compressed[j] = memblock[9 + mHeader.fileNameLength + j];
             }
-            std::cout << "compressed data found." << std::endl;
+            //clean up original
+            delete[] memblock;
+            //decompress data
             mData.Decompress(compressed, static_cast<unsigned int>(size) - 9 - mHeader.fileNameLength, mHeader.fileSize);
-            std::cout << "decompress complete." << std::endl;
+            //clean up
+            delete[] compressed;
+            std::cout << "Decompression complete!" << std::endl;
             std::ofstream arc(mHeader.fileName, std::ios::out|std::ios::binary|std::ios::trunc);
             if (arc.is_open())
             {
@@ -99,7 +106,9 @@ void RleFile::ExtractArchive(const std::string& source)
                 arc.write(mData.mData, mData.mSize);
             }
         }
-        // Make sure to clean up!
-        delete[] memblock;
+    }
+    //tell user if file did not open
+    else{
+        std::cout << "File does not exist!" << std::endl;
     }
 }

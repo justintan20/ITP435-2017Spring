@@ -24,12 +24,13 @@ public:
 	{
 		TEST_CASE_DESCRIBE(testBasicPositiveRuns, "Basic positive runs test");
 		// TODO: Add more Compression test cases
-        TEST_CASE_DESCRIBE(testLongerPositiveRuns, "Long positive runs test");
-        TEST_CASE_DESCRIBE(testLongNegativeRuns, "Long negative runs test");
+        TEST_CASE_DESCRIBE(testLongPositiveRuns, "Long positive runs test");
+        TEST_CASE_DESCRIBE(testBasicNegativeRuns, "Basic negative runs test");
         TEST_CASE_DESCRIBE(testAlternatingRuns, "Alternating runs test");
         TEST_CASE_DESCRIBE(testLongerThanMaxRuns, "Longer than max runs test");
         TEST_CASE_DESCRIBE(testCrazyLongRuns, "Crazy long runs test");
         TEST_CASE_DESCRIBE(testLongAlternatingRuns, "Long Alternating runs test");
+        TEST_CASE_DESCRIBE(testLongerThanMaxNegativeRuns, "Longer than max negative runs test");
         
 	}
 	
@@ -49,14 +50,14 @@ public:
 		runCompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
 	}
     
-    void testLongerPositiveRuns()
+    void testLongPositiveRuns()
     {
         char test[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         char expected[] = "\x64" "a";
         runCompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
     }
     
-    void testLongNegativeRuns()
+    void testBasicNegativeRuns()
     {
         char test[] = "qwertyuiopasdfghjklzxcvbnm";
         char expected[] = "\xe6" "qwertyuiopasdfghjklzxcvbnm";
@@ -90,6 +91,13 @@ public:
         char expected[] = "\x03" "a" "\x04" "b" "\x7f" "c" "\x17" "c" "\x03" "d";
         runCompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
     }
+    
+    void testLongerThanMaxNegativeRuns()
+    {
+        char test[] = "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf";
+        char expected[] = "\x81" "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd" "\xdf" "fasdfasdfasdfasdfasdfasdfasdfasdf";
+        runCompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
+    }
 };
 
 class DecompressionTests : public TestFixture<DecompressionTests>
@@ -101,13 +109,15 @@ public:
 		// TODO: Add more Decompression test  cases
         TEST_CASE_DESCRIBE(testBasicNegativeRuns, "Basic negative run test");
         TEST_CASE_DESCRIBE(testAlternatingRuns, "Alternating run test");
+        TEST_CASE_DESCRIBE(testLongPositiveRuns, "Long positive run test");
+        TEST_CASE_DESCRIBE(testLongNegativeRuns, "Long negative run test");
+        
 	}
 	
 	void testBasicPositiveRuns()
 	{
 		char test[] = "\x28" "x";
 		char expected[] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-		
 		runDecompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
 	}
     
@@ -122,6 +132,20 @@ public:
     {
         char test[] = "\x04" "a" "\x02" "b" "\xfc" "cbca" "\x09" "b" "\x02" "c" "\x04" "a" "\xfb" "bcaba" "\x02" "c" "\x02" "a" "\xfa" "bcabca" "\x03" "b" "\x01" "c" "\x02" "a";
         char expected[] = "aaaabbcbcabbbbbbbbbccaaaabcabaccaabcabcabbbcaa";
+        runDecompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
+    }
+    
+    void testLongPositiveRuns()
+    {
+        char test[] = "\x7f" "x" "\x7f" "x" "\x7f" "x" "\x13" "x";
+        char expected[] = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+        runDecompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
+    }
+    
+    void testLongNegativeRuns()
+    {
+        char test[] = "\x81" "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd" "\xdf" "fasdfasdfasdfasdfasdfasdfasdfasdf";
+        char expected[] = "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf";
         runDecompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
     }
 };

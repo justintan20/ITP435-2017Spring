@@ -23,9 +23,9 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		// TODO: Get the file name from argv[1] and either compress/decompress
+		//Get the file name from argv[1] and either compress/decompress
         RleFile a;
-//        a.CreateArchive(argv[1]);
+        a.CreateArchive(argv[1]);
 //        a.ExtractArchive(argv[1]);
     }
 	return 0;
