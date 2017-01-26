@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19CE67AA1E397A250082F0BC /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CE67A81E397A250082F0BC /* Dictionary.cpp */; };
 		92296D611B86CDDA00FED746 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D5C1B86CDDA00FED746 /* Main.cpp */; };
 		92296D621B86CDDA00FED746 /* Sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D5D1B86CDDA00FED746 /* Sha1.cpp */; };
 		92296D631B86CDDA00FED746 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D5F1B86CDDA00FED746 /* Timer.cpp */; };
@@ -25,6 +26,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		19CE67A81E397A250082F0BC /* Dictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Dictionary.cpp; sourceTree = SOURCE_ROOT; };
+		19CE67A91E397A250082F0BC /* Dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dictionary.h; sourceTree = SOURCE_ROOT; };
 		92296D5C1B86CDDA00FED746 /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = SOURCE_ROOT; };
 		92296D5D1B86CDDA00FED746 /* Sha1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sha1.cpp; sourceTree = SOURCE_ROOT; };
 		92296D5E1B86CDDA00FED746 /* Sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sha1.h; sourceTree = SOURCE_ROOT; };
@@ -64,6 +67,8 @@
 			isa = PBXGroup;
 			children = (
 				92296D5C1B86CDDA00FED746 /* Main.cpp */,
+				19CE67A81E397A250082F0BC /* Dictionary.cpp */,
+				19CE67A91E397A250082F0BC /* Dictionary.h */,
 				92296D5D1B86CDDA00FED746 /* Sha1.cpp */,
 				92296D5E1B86CDDA00FED746 /* Sha1.h */,
 				92296D5F1B86CDDA00FED746 /* Timer.cpp */,
@@ -129,6 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				92296D631B86CDDA00FED746 /* Timer.cpp in Sources */,
+				19CE67AA1E397A250082F0BC /* Dictionary.cpp in Sources */,
 				92296D621B86CDDA00FED746 /* Sha1.cpp in Sources */,
 				92296D611B86CDDA00FED746 /* Main.cpp in Sources */,
 			);

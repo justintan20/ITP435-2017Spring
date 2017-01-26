@@ -31,7 +31,7 @@ public:
         TEST_CASE_DESCRIBE(testCrazyLongRuns, "Crazy long runs test");
         TEST_CASE_DESCRIBE(testLongAlternatingRuns, "Long Alternating runs test");
         TEST_CASE_DESCRIBE(testLongerThanMaxNegativeRuns, "Longer than max negative runs test");
-        
+        TEST_CASE_DESCRIBE(testEndZeroRuns, "Ending in zero runs test");
 	}
 	
 	void testBasicPositiveRuns()
@@ -96,6 +96,13 @@ public:
     {
         char test[] = "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf";
         char expected[] = "\x81" "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd" "\xdf" "fasdfasdfasdfasdfasdfasdfasdfasdf";
+        runCompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
+    }
+    
+    void testEndZeroRuns()
+    {
+        char test[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" "\x00\x00";
+        char expected[] = "\x7f" "a" "\x7b" "a" "\x00\x00";
         runCompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
     }
 };
