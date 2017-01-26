@@ -102,7 +102,7 @@ public:
     void testEndZeroRuns()
     {
         char test[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" "\x00\x00";
-        char expected[] = "\x7f" "a" "\x7b" "a" "\x00\x00";
+        char expected[] = "\x7f" "a" "\x7b" "a" "\x02" "\x00";
         runCompressionTest(test, sizeof(test) - 1, expected, sizeof(expected) - 1);
     }
 };

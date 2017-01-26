@@ -24,6 +24,8 @@ struct RleData
 
 	// Decompresses input data and stores it in mData
 	void Decompress(const char* input, size_t inSize, size_t outSize);
+    
+    void addToArray(int num, char c);
 
 	// Outputs mData
 	friend std::ostream& operator<< (std::ostream& stream, const RleData& rhs);

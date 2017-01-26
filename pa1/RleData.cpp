@@ -17,8 +17,10 @@ void RleData::Compress(const char* input, size_t inSize){
         //previous and next char helper variables
         char prev = input[i - 1];
         char next = input[i + 1];
+        char curr = input[i];
+
         //case where the two chars are the same
-        if (input[i] == prev){
+        if (curr == prev){
             //increment num of same chars
             num++;
             //if reaches max run size
@@ -36,14 +38,15 @@ void RleData::Compress(const char* input, size_t inSize){
                 mData[mSize] = num;
                 mSize++;
                 mData[mSize] = prev;
+                mSize++;
             }
         }
         //case where two chars are not the same
-        else if (input[i] != prev){
+        else if (curr != prev){
             //if it is single outstanding char
             if (num == 1){
                 //if the next one is still not equal and also not the end of the input
-                if ((input[i] != next) && (i != inSize - 1)){
+                if ((curr != next) && (i != inSize - 1)){
                     //add char to the helper char array and increment number of different chars
                     differ[diff - 1] = prev;
                     diff++;
@@ -63,7 +66,7 @@ void RleData::Compress(const char* input, size_t inSize){
                     //add the last two to the helper array
                     differ[diff - 1] = prev;
                     diff++;
-                    differ[diff - 1] = input[i];
+                    differ[diff - 1] = curr;
                     //first add negative number indication
                     mData[mSize] = diff * (-1);
                     mSize++;
@@ -76,7 +79,7 @@ void RleData::Compress(const char* input, size_t inSize){
                     diff = 1;
                 }
                 //if the next one and the current one are the same
-                else if (input[i] == next){
+                else if (curr == next){
                     //add previous to helper array
                     differ[diff - 1] = prev;
                     //if more than 1 alternating, use negative number
