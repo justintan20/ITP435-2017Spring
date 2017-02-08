@@ -12,11 +12,14 @@
 #include <string>
 #include <unordered_map>
 
-class Dictionary{
+class Dictionary
+{
 private:
-    std::string mFileName;
-    std::unordered_map<std::string, std::string> mHash_pass;
+    std::unordered_map<std::string, std::string> mHashPass;
     
 public:
-    Dictionary(std::string fileName);
+    //dictionary constructor with given file name
+    Dictionary(const std::string& fileName);
+    //finds the hex hash in the dictionary and returns hash with solution
+    std::pair<std::string, std::string> findHash(const std::string& hash) const;
 };

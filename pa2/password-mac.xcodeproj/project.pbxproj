@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		193B47CB1E440A42002498E2 /* BruteForce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193B47C91E440A42002498E2 /* BruteForce.cpp */; };
+		19C242FD1E42D7D80060DA42 /* Decrypt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19C242FB1E42D7D80060DA42 /* Decrypt.cpp */; };
 		19CE67AA1E397A250082F0BC /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CE67A81E397A250082F0BC /* Dictionary.cpp */; };
 		92296D611B86CDDA00FED746 /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D5C1B86CDDA00FED746 /* Main.cpp */; };
 		92296D621B86CDDA00FED746 /* Sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D5D1B86CDDA00FED746 /* Sha1.cpp */; };
@@ -26,6 +28,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		193B47C91E440A42002498E2 /* BruteForce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BruteForce.cpp; sourceTree = SOURCE_ROOT; };
+		193B47CA1E440A42002498E2 /* BruteForce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BruteForce.h; sourceTree = SOURCE_ROOT; };
+		19C242FB1E42D7D80060DA42 /* Decrypt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Decrypt.cpp; sourceTree = SOURCE_ROOT; };
+		19C242FC1E42D7D80060DA42 /* Decrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decrypt.h; sourceTree = SOURCE_ROOT; };
 		19CE67A81E397A250082F0BC /* Dictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Dictionary.cpp; sourceTree = SOURCE_ROOT; };
 		19CE67A91E397A250082F0BC /* Dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dictionary.h; sourceTree = SOURCE_ROOT; };
 		92296D5C1B86CDDA00FED746 /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = SOURCE_ROOT; };
@@ -66,8 +72,12 @@
 		9295975C1A4E53A4005EB005 /* password-mac */ = {
 			isa = PBXGroup;
 			children = (
-				92296D5C1B86CDDA00FED746 /* Main.cpp */,
+				193B47C91E440A42002498E2 /* BruteForce.cpp */,
 				19CE67A81E397A250082F0BC /* Dictionary.cpp */,
+				19C242FB1E42D7D80060DA42 /* Decrypt.cpp */,
+				92296D5C1B86CDDA00FED746 /* Main.cpp */,
+				193B47CA1E440A42002498E2 /* BruteForce.h */,
+				19C242FC1E42D7D80060DA42 /* Decrypt.h */,
 				19CE67A91E397A250082F0BC /* Dictionary.h */,
 				92296D5D1B86CDDA00FED746 /* Sha1.cpp */,
 				92296D5E1B86CDDA00FED746 /* Sha1.h */,
@@ -133,10 +143,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19C242FD1E42D7D80060DA42 /* Decrypt.cpp in Sources */,
 				92296D631B86CDDA00FED746 /* Timer.cpp in Sources */,
 				19CE67AA1E397A250082F0BC /* Dictionary.cpp in Sources */,
 				92296D621B86CDDA00FED746 /* Sha1.cpp in Sources */,
 				92296D611B86CDDA00FED746 /* Main.cpp in Sources */,
+				193B47CB1E440A42002498E2 /* BruteForce.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
