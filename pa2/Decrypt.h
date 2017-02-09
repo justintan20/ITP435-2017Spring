@@ -2,7 +2,7 @@
 //  Decrypt.hpp
 //  password-mac
 //
-//  Created by Justin Tan on 2/1/17.
+//  Created by Justin Yong Jia Tan on 2/1/17.
 //  Copyright © 2017 Sanjay Madhav. All rights reserved.
 //
 

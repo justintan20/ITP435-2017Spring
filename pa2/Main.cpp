@@ -17,10 +17,6 @@ int main(int argc, char* argv[])
         sha1::toHexString(hash, hex_str);
         std::cout << hex_str << std::endl;
     }
-//    std::vector<Data> test;
-//    test.push_back(Data(0, "df438000df9731878aaf8c84b4e64e0971bf698a", "??"));
-//    BruteForce execution(test);
-//    std::cout << test[0].getSolution();
     //decrypt
     else if(argc == 3)
     {

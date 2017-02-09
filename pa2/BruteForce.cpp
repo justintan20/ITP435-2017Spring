@@ -2,37 +2,41 @@
 //  BruteForce.cpp
 //  password-mac
 //
-//  Created by Justin Tan on 2/2/17.
+//  Created by Justin Yong Jia Tan on 2/2/17.
 //  Copyright © 2017 Sanjay Madhav. All rights reserved.
 //
 
 #include "BruteForce.h"
 #include "Sha1.h"
 #include <iostream>
-#include <tbb/parallel_invoke.h>
 
 BruteForce::BruteForce()
 {
     //initialize counting machines
-    mCountMachine4[0] = 0;
-    mCountMachine4[1] = 0;
-    mCountMachine4[2] = 0;
-    mCountMachine4[3] = 0;
-    mCountMachine1 = 0;
-    mCountMachine2[0] = 0;
-    mCountMachine2[1] = 0;
-    mCountMachine3[0] = 0;
-    mCountMachine3[1] = 0;
-    mCountMachine3[2] = 0;
+    
 }
 
 void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string>>& unsolved, int start, int end)
 {
     //set counting machines
-    mCountMachine1 = start;
-    mCountMachine2[0] = start;
-    mCountMachine3[0] = start;
-    mCountMachine4[0] = start;
+    int countMachine4[4];
+    int countMachine3[3];
+    int countMachine2[2];
+    int countMachine1;
+    countMachine1 = start;
+    countMachine2[0] = start;
+    countMachine3[0] = start;
+    countMachine4[0] = start;
+    countMachine4[0] = 0;
+    countMachine4[1] = 0;
+    countMachine4[2] = 0;
+    countMachine4[3] = 0;
+    countMachine1 = 0;
+    countMachine2[0] = 0;
+    countMachine2[1] = 0;
+    countMachine3[0] = 0;
+    countMachine3[1] = 0;
+    countMachine3[2] = 0;
     //helper booleans
     bool loopEnd1 = false;
     bool loopEnd2 = false;
@@ -42,7 +46,7 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
     while(loopEnd1 == false)
     {
         //convert and hash
-        std::string convertedStr = convert1() + '\0';
+        std::string convertedStr = convert1(countMachine1);
         unsigned char hash[20];
         sha1::calc(convertedStr.c_str(), 1, hash);
         char hex_str[41];
@@ -52,11 +56,10 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
             if(hex_str == unsolved[i].first)
             {
                 unsolved[i].second = convertedStr;
-                std::cout << convertedStr << std::endl;
             }
         }
-        mCountMachine1++;
-        if(mCountMachine1 == end + 1)
+        countMachine1++;
+        if(countMachine1 == end + 1)
         {
             loopEnd1 = true;
         }
@@ -64,7 +67,7 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
     //check for length 2
     while(loopEnd2 == false)
     {
-        std::string convertedStr = convert2() + '\0';
+        std::string convertedStr = convert2(countMachine2);
         unsigned char hash[20];
         sha1::calc(convertedStr.c_str(), 2, hash);
         char hex_str[41];
@@ -74,16 +77,15 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
             if(hex_str == unsolved[i].first)
             {
                 unsolved[i].second = convertedStr;
-                std::cout << convertedStr << std::endl;
             }
         }
-        mCountMachine2[1]++;
-        if(mCountMachine2[1] == 36)
+        countMachine2[1]++;
+        if(countMachine2[1] == 36)
         {
-            mCountMachine2[1] = 0;
-            mCountMachine2[0]++;
+            countMachine2[1] = 0;
+            countMachine2[0]++;
         }
-        if(mCountMachine2[0] == end + 1)
+        if(countMachine2[0] == end + 1)
         {
             loopEnd2 = true;
         }
@@ -91,7 +93,7 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
     //check for length 3
     while(loopEnd3 == false)
     {
-        std::string convertedStr = convert3() + '\0';
+        std::string convertedStr = convert3(countMachine3);
         unsigned char hash[20];
         sha1::calc(convertedStr.c_str(), 3, hash);
         char hex_str[41];
@@ -101,21 +103,20 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
             if(hex_str == unsolved[i].first)
             {
                 unsolved[i].second = convertedStr;
-                std::cout << convertedStr << std::endl;
             }
         }
-        mCountMachine3[2]++;
-        if(mCountMachine3[2] == 36)
+        countMachine3[2]++;
+        if(countMachine3[2] == 36)
         {
-            mCountMachine3[2] = 0;
-            mCountMachine3[1]++;
+            countMachine3[2] = 0;
+            countMachine3[1]++;
         }
-        if(mCountMachine3[1] == 36)
+        if(countMachine3[1] == 36)
         {
-            mCountMachine3[1] = 0;
-            mCountMachine3[0]++;
+            countMachine3[1] = 0;
+            countMachine3[0]++;
         }
-        if(mCountMachine3[0] == end + 1)
+        if(countMachine3[0] == end + 1)
         {
             loopEnd3 = true;
         }
@@ -123,7 +124,7 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
     //check for length 4
     while(loopEnd4 == false)
     {
-        std::string convertedStr = convert4() + '\0';
+        std::string convertedStr = convert4(countMachine4);
         unsigned char hash[20];
         sha1::calc(convertedStr.c_str(), 4, hash);
         char hex_str[41];
@@ -133,26 +134,25 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
             if(hex_str == unsolved[i].first)
             {
                 unsolved[i].second = convertedStr;
-                std::cout << convertedStr << std::endl;
             }
         }
-        mCountMachine4[3]++;
-        if(mCountMachine4[3] == 36)
+        countMachine4[3]++;
+        if(countMachine4[3] == 36)
         {
-            mCountMachine4[3] = 0;
-            mCountMachine4[2]++;
+            countMachine4[3] = 0;
+            countMachine4[2]++;
         }
-        if(mCountMachine4[2] == 36)
+        if(countMachine4[2] == 36)
         {
-            mCountMachine4[2] = 0;
-            mCountMachine4[1]++;
+            countMachine4[2] = 0;
+            countMachine4[1]++;
         }
-        if(mCountMachine4[1] == 36)
+        if(countMachine4[1] == 36)
         {
-            mCountMachine4[1] = 0;
-            mCountMachine4[0]++;
+            countMachine4[1] = 0;
+            countMachine4[0]++;
         }
-        if(mCountMachine4[0] == end + 1)
+        if(countMachine4[0] == end + 1)
         {
             //reaches end of check, set to ?? if still unknown
             loopEnd4 = true;
@@ -160,55 +160,44 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
     }
 }
 
-//std::string BruteForce::BruteForceParallel(std::string& unsolved){
-//    tbb::parallel_invoke(
-//        [this, unsolved] { BruteForceHelper(unsolved, 0, 3);},
-//        [this, unsolved] { BruteForceHelper(unsolved, 4, 7);},
-//        [this, unsolved] { BruteForceHelper(unsolved, 8, 11);},
-//        [this, unsolved] { BruteForceHelper(unsolved, 12, 15);},
-//        [this, unsolved] { BruteForceHelper(unsolved, 16, 19);},
-//        [this, unsolved] { BruteForceHelper(unsolved, 20, 23);},
-//        [this, unsolved] { BruteForceHelper(unsolved, 24, 27);},
-//        [this, unsolved] { BruteForceHelper(unsolved, 28, 31);},
-//        [this, unsolved] { BruteForceHelper(unsolved, 32, 35);}
-//    );
-//    return unsolved;
-//}
-
-std::string BruteForce::convert1() const
-{
-    std::string output;
-    output = convertElement(mCountMachine1);
-    return output;
-}
-
-std::string BruteForce::convert2() const
+std::string BruteForce::convert1(int countMachine1) const
 {
     char output[2];
-    for(int i = 0; i < 2; i++)
-    {
-        output[i] = convertElement(mCountMachine2[i]);
-    }
+    output[0] = convertElement(countMachine1);
+    output[1] = '\0';
     return output;
 }
 
-std::string BruteForce::convert3() const
+std::string BruteForce::convert2(int countMachine2[2]) const
 {
     char output[3];
-    for(int i = 0; i < 3; i++)
+    for(int i = 0; i < 2; i++)
     {
-        output[i] = convertElement(mCountMachine3[i]);
+        output[i] = convertElement(countMachine2[i]);
     }
+    output[2] = '\0';
     return output;
 }
 
-std::string BruteForce::convert4() const
+std::string BruteForce::convert3(int countMachine3[3]) const
 {
     char output[4];
+    for(int i = 0; i < 3; i++)
+    {
+        output[i] = convertElement(countMachine3[i]);
+    }
+    output[3] = '\0';
+    return output;
+}
+
+std::string BruteForce::convert4(int countMachine4[4]) const
+{
+    char output[5];
     for(int i = 0; i < 4; i++)
     {
-        output[i] = convertElement(mCountMachine4[i]);
+        output[i] = convertElement(countMachine4[i]);
     }
+    output[4] = '\0';
     return output;
 }
 

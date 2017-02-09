@@ -2,7 +2,7 @@
 //  Decrypt.cpp
 //  password-mac
 //
-//  Created by Justin Tan on 2/1/17.
+//  Created by Justin Yong Jia Tan on 2/1/17.
 //  Copyright © 2017 Sanjay Madhav. All rights reserved.
 //
 
@@ -46,20 +46,14 @@ Decrypt::Decrypt(const std::string& passFileName, const Dictionary& dictionary)
         Timer time;
         time.start();
         BruteForce bruteForceObject;
-//        tbb::parallel_invoke(
-//                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 0, 3);},
-//                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 4, 7);},
-//                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 8, 11);},
-//                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 12, 15);},
-//                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 16, 19);},
-//                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 20, 23);},
-//                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 24, 27);},
-//                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 28, 31);},
-//                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 32, 35);}
-//                             );
-        bruteForceObject.BruteForceHelper(unsolved, 0, 35);
+        tbb::parallel_invoke(
+                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 0, 17);},
+                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved,18, 35);}
+                             );
+//        bruteForceObject.BruteForceHelper(unsolved, 0, 35);
         std::cout << "Brute force time: " << time.getElapsed() << std::endl;
         int unsolvedIndex = 0;
+        //output results to file
         for (int i = 0; i < solved.size(); i++)
         {
             if(solved[i].second == "??")
