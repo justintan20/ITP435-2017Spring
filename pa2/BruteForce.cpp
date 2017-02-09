@@ -27,14 +27,10 @@ void BruteForce::BruteForceHelper(std::vector<std::pair<std::string, std::string
     countMachine2[0] = start;
     countMachine3[0] = start;
     countMachine4[0] = start;
-    countMachine4[0] = 0;
     countMachine4[1] = 0;
     countMachine4[2] = 0;
     countMachine4[3] = 0;
-    countMachine1 = 0;
-    countMachine2[0] = 0;
     countMachine2[1] = 0;
-    countMachine3[0] = 0;
     countMachine3[1] = 0;
     countMachine3[2] = 0;
     //helper booleans

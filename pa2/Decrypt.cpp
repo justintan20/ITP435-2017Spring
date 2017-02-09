@@ -47,8 +47,12 @@ Decrypt::Decrypt(const std::string& passFileName, const Dictionary& dictionary)
         time.start();
         BruteForce bruteForceObject;
         tbb::parallel_invoke(
-                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 0, 17);},
-                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved,18, 35);}
+                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 0, 5);},
+                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 6, 11);},
+                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 12, 17);},
+                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved,18, 23);},
+                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 24, 29);},
+                             [&bruteForceObject, &unsolved] { bruteForceObject.BruteForceHelper(unsolved, 30, 35);}
                              );
 //        bruteForceObject.BruteForceHelper(unsolved, 0, 35);
         std::cout << "Brute force time: " << time.getElapsed() << std::endl;
