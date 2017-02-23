@@ -21,7 +21,7 @@ public:
 	void AddShape(std::shared_ptr<Shape> shape);
 	// Remove a shape from the paint model
 	void RemoveShape(std::shared_ptr<Shape> shape);
-    
+    //Checks if there is an active command
     bool HasActiveCommand() const;
     
     void CreateCommand(CommandType type, const wxPoint& start);

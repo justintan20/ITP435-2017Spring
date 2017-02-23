@@ -53,6 +53,7 @@ private:
 
 	void SetCursor(CursorType type);
     
+    //Turns undo/redo buttons on/off
     void UpdateUndoRedoButtons();
 	
 	wxDECLARE_EVENT_TABLE();
@@ -71,5 +72,6 @@ private:
 	class PaintDrawPanel* mPanel;
 
 	EventID mCurrentTool;
+    //Boolean to store if file has been saved
     bool mIsSaved;
 };

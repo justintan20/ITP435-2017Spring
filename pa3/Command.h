@@ -34,8 +34,8 @@ public:
 	virtual void Undo(std::shared_ptr<PaintModel> model) = 0;
 	// Used to "redo" the command
 	virtual void Redo(std::shared_ptr<PaintModel> model) = 0;
-    
-    virtual std::shared_ptr<Shape> GetShape();
+    //Getter for mShape
+    virtual std::shared_ptr<Shape> GetShape() const;
 	virtual ~Command() { }
 protected:
 	wxPoint mStartPoint;
@@ -47,6 +47,7 @@ protected:
 class DrawCommand : public Command
 {
 public:
+    //constructor and inherited methods
     DrawCommand(const wxPoint& start, std::shared_ptr<Shape> shape);
     void Update(const wxPoint& newPoint) override;
     void Finalize(std::shared_ptr<PaintModel> model) override;

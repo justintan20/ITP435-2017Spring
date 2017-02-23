@@ -176,14 +176,14 @@ void PaintFrame::OnExit(wxCommandEvent& event)
 
 void PaintFrame::OnNew(wxCommandEvent& event)
 {
-	mModel->New();
+    mModel->New();
     UpdateUndoRedoButtons();
 	mPanel->PaintNow();
 }
 
 void PaintFrame::OnExport(wxCommandEvent& event)
 {
-	// TODO
+    //new file dialog
     wxFileDialog dialog(this, _("Save File"), "", "", "PNG(*.png)|*.png|JPEG(*.jpeg)|*.jpeg|BMP(*.bmp)|*.bmp",wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
     if (dialog.ShowModal() == wxID_CANCEL)
     {
@@ -197,12 +197,13 @@ void PaintFrame::OnExport(wxCommandEvent& event)
         wxLogError("Cannot save current contents in file '%s'.", dialog.GetPath());
         return;
     }
+    //export to file
     mModel->Export(dialog.GetPath(), mPanel->GetSize());
 }
 
 void PaintFrame::OnImport(wxCommandEvent& event)
 {
-	// TODO
+    //check if saved
     if (mIsSaved == false)
     {
         if (wxMessageBox(_("Current content has not been saved! Proceed?"), _("Please confirm"),
@@ -212,7 +213,7 @@ void PaintFrame::OnImport(wxCommandEvent& event)
         }
         //else: proceed asking to the user the new file to open
     }
-    
+    //new file dialog
     wxFileDialog
     openFileDialog(this, _("Open File"), "", "",
                    "JPEG(*.jpeg)|*.jpeg|BMP(*.bmp)|*.bmp|PNG(*.png)|*.png", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
@@ -229,6 +230,7 @@ void PaintFrame::OnImport(wxCommandEvent& event)
         wxLogError("Cannot open file '%s'.", openFileDialog.GetPath());
         return;
     }
+    //check file format and load accordingly
     wxString fileName = openFileDialog.GetPath();
     if(fileName.AfterLast('.').Cmp("jpg") == 0 ||fileName.AfterLast('.').Cmp("jpeg") == 0)
     {
@@ -247,7 +249,6 @@ void PaintFrame::OnImport(wxCommandEvent& event)
 
 void PaintFrame::OnUndo(wxCommandEvent& event)
 {
-	// TODO
     mModel->Undo();
     mPanel->PaintNow();
     UpdateUndoRedoButtons();
@@ -256,7 +257,6 @@ void PaintFrame::OnUndo(wxCommandEvent& event)
 
 void PaintFrame::OnRedo(wxCommandEvent& event)
 {
-	// TODO
     mModel->Redo();
     mPanel->PaintNow();
     UpdateUndoRedoButtons();
@@ -265,7 +265,6 @@ void PaintFrame::OnRedo(wxCommandEvent& event)
 
 void PaintFrame::OnUnselect(wxCommandEvent& event)
 {
-	// TODO
     mModel->SelectShape(wxPoint());
     mEditMenu->Enable(ID_Unselect, false);
     mEditMenu->Enable(ID_Delete, false);
@@ -274,7 +273,6 @@ void PaintFrame::OnUnselect(wxCommandEvent& event)
 
 void PaintFrame::OnDelete(wxCommandEvent& event)
 {
-	// TODO
     mModel->CreateCommand(CM_Delete, wxPoint());
     mModel->FinalizeCommand();
     mEditMenu->Enable(ID_Unselect, false);
@@ -285,7 +283,6 @@ void PaintFrame::OnDelete(wxCommandEvent& event)
 
 void PaintFrame::OnSetPenColor(wxCommandEvent& event)
 {
-	// TODO
     wxColourData data;
     data.SetColour(mModel->GetPenColour());
     wxColourDialog dialog(this, &data);
@@ -304,7 +301,7 @@ void PaintFrame::OnSetPenColor(wxCommandEvent& event)
 
 void PaintFrame::OnSetPenWidth(wxCommandEvent& event)
 {
-	// TODO
+    //new dialog, ask for input
     wxTextEntryDialog dialog;
     wxWindow window;
     dialog.Create(&window, "Enter Pen Width (1-10):");
@@ -312,6 +309,7 @@ void PaintFrame::OnSetPenWidth(wxCommandEvent& event)
     {
         std::string input = dialog.GetValue().ToStdString();
         bool isNum = true;
+        //check range
         for(int i = 0; i < input.size(); i++)
         {
             if(!isdigit(input[i]))
@@ -339,7 +337,6 @@ void PaintFrame::OnSetPenWidth(wxCommandEvent& event)
 
 void PaintFrame::OnSetBrushColor(wxCommandEvent& event)
 {
-	// TODO
     wxColourData data;
     data.SetColour(mModel->GetBrushColour());
     wxColourDialog dialog(this, &data);
@@ -360,7 +357,7 @@ void PaintFrame::OnMouseButton(wxMouseEvent& event)
 {
 	if (event.LeftDown())
 	{
-		// TODO: This is when the left mouse button is pressed
+		// This is when the left mouse button is pressed
         if (mCurrentTool == ID_DrawRect)
         {
             mModel->CreateCommand(CM_DrawRect, event.GetPosition());
@@ -413,7 +410,7 @@ void PaintFrame::OnMouseButton(wxMouseEvent& event)
 
 void PaintFrame::OnMouseMove(wxMouseEvent& event)
 {
-	// TODO: This is when the mouse is moved inside the drawable area
+	// This is when the mouse is moved inside the drawable area
     SetCursor(CU_Default);
     if(mModel->GetSelectedShape() != nullptr)
     {

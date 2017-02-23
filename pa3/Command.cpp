@@ -16,7 +16,7 @@ void Command::Update(const wxPoint& newPoint)
 	mEndPoint = newPoint;
 }
 
-std::shared_ptr<Shape> Command::GetShape()
+std::shared_ptr<Shape> Command::GetShape() const
 {
     return mShape;
 }

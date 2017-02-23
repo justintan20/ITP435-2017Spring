@@ -10,7 +10,6 @@ PaintModel::PaintModel()
 // Draws any shapes in the model to the provided DC (draw context)
 void PaintModel::DrawShapes(wxDC& dc, bool showSelection)
 {
-	// TODO
     if(mStoredBitmap.IsOk())
     {
         dc.DrawBitmap(mStoredBitmap, wxPoint());
@@ -28,7 +27,6 @@ void PaintModel::DrawShapes(wxDC& dc, bool showSelection)
 // Clear the current paint model and start fresh
 void PaintModel::New()
 {
-	// TODO
     mCommand.reset();
     mShapes.clear();
     while (mUndo.empty() == false)
