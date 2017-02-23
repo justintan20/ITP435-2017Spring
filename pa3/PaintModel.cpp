@@ -11,6 +11,10 @@ PaintModel::PaintModel()
 void PaintModel::DrawShapes(wxDC& dc, bool showSelection)
 {
 	// TODO
+    if(mStoredBitmap.IsOk())
+    {
+        dc.DrawBitmap(mStoredBitmap, wxPoint());
+    }
     for(int i = 0; i < mShapes.size(); i++)
     {
         mShapes[i]->Draw(dc);
@@ -38,6 +42,7 @@ void PaintModel::New()
     mPen = *wxBLACK_PEN;
     mBrush = *wxWHITE_BRUSH;
     mSelectedShape.reset();
+    mStoredBitmap = wxBitmap();
 }
 
 // Add a shape to the paint model
@@ -228,4 +233,11 @@ void PaintModel::Export(const wxString& fileName, const wxSize& size)
     }
     // Write the bitmap with the specified file name and wxBitmapType
     bitmap.SaveFile(fileName, type);
+}
+
+void PaintModel::Load(const wxString& fileName, const wxBitmapType& type){
+    New();
+    mStoredBitmap.LoadFile(fileName, type);
+    wxMemoryDC dc(mStoredBitmap);
+    DrawShapes(dc);
 }

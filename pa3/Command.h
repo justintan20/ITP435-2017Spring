@@ -43,6 +43,7 @@ protected:
 	std::shared_ptr<Shape> mShape;
 };
 
+//Draw Command class
 class DrawCommand : public Command
 {
 public:
@@ -53,6 +54,7 @@ public:
     void Redo(std::shared_ptr<PaintModel> model) override;
 };
 
+//SetPenCommand sets selected shape's pen color and width
 class SetPenCommand : public Command
 {
 public:
@@ -65,6 +67,7 @@ private:
     wxPen mNewPen;
 };
 
+//SetBrushCommand sets selected shape's brush color
 class SetBrushCommand : public Command
 {
 public:
@@ -77,6 +80,7 @@ private:
     wxBrush mNewBrush;
 };
 
+//DeleteCommand deletes selected shape
 class DeleteCommand: public Command
 {
 public:
@@ -86,6 +90,7 @@ public:
     void Redo(std::shared_ptr<PaintModel> model) override;
 };
 
+//MoveCommand moves selected shape
 class MoveCommand : public Command
 {
 public:

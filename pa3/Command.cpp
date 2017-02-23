@@ -166,12 +166,12 @@ void DeleteCommand::Finalize(std::shared_ptr<PaintModel> model)
 
 void DeleteCommand::Undo(std::shared_ptr<PaintModel> model)
 {
-    
+    model->AddShape(mShape);
 }
 
 void DeleteCommand::Redo(std::shared_ptr<PaintModel> model)
 {
-    
+    model->RemoveShape(mShape);
 }
 
 MoveCommand::MoveCommand(const wxPoint& start, std::shared_ptr<Shape> shape): Command(start, shape)
@@ -184,6 +184,7 @@ void MoveCommand::Update(const wxPoint& newPoint)
     mNewPoint = newPoint;
     wxPoint offset = mNewPoint - mOldPoint;
     mShape->SetOffset(mShape->GetOffset() + offset);
+    mOldPoint = newPoint;
 }
 
 void MoveCommand::Finalize(std::shared_ptr<PaintModel> model)

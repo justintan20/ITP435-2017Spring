@@ -52,6 +52,7 @@ public:
     std::shared_ptr<Shape> GetSelectedShape();
     
     void Export(const wxString& fileName, const wxSize& size);
+    void Load(const wxString& fileName, const wxBitmapType& type);
 private:
 	// Vector of all the shapes in the model
 	std::vector<std::shared_ptr<Shape>> mShapes;
@@ -61,4 +62,5 @@ private:
     wxPen mPen = *wxBLACK_PEN;
     wxBrush mBrush = *wxWHITE_BRUSH;
     std::shared_ptr<Shape> mSelectedShape;
+    wxBitmap mStoredBitmap;
 };
