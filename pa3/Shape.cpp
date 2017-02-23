@@ -6,7 +6,8 @@ Shape::Shape(const wxPoint& start)
 	,mTopLeft(start)
 	,mBotRight(start)
 {
-
+    mOffset.x = 0;
+    mOffset.y = 0;
 }
 
 // Tests whether the provided point intersects
@@ -48,6 +49,140 @@ void Shape::Finalize()
 
 void Shape::GetBounds(wxPoint& topLeft, wxPoint& botRight) const
 {
-	topLeft = mTopLeft;
-	botRight = mBotRight;
+	topLeft.x = mTopLeft.x + mOffset.x;
+    topLeft.y = mTopLeft.y + mOffset.y;
+    botRight.x = mBotRight.x + mOffset.x;
+    botRight.y = mBotRight.y + mOffset.y;
+}
+
+void Shape::SetPen(const wxPen& pen)
+{
+    mPen = pen;
+}
+
+wxPen Shape::GetPen() const
+{
+    return mPen;
+}
+
+void Shape::SetBrush(const wxBrush& brush)
+{
+    mBrush = brush;
+}
+
+wxBrush Shape::GetBrush() const
+{
+    return mBrush;
+}
+
+void Shape::DrawSelection(wxDC& dc) const
+{
+    dc.SetPen(*wxBLACK_DASHED_PEN);
+    dc.SetBrush(*wxTRANSPARENT_BRUSH);
+    wxPoint topLeft;
+    wxPoint botRight;
+    topLeft.x = mTopLeft.x + mOffset.x - 10;
+    topLeft.y = mTopLeft.y + mOffset.y - 10;
+    botRight.x = mBotRight.x + mOffset.x + 10;
+    botRight.y = mBotRight.y + mOffset.y + 10;
+    wxRect rect(topLeft,botRight);
+    dc.DrawRectangle(rect);
+}
+
+void Shape::SetOffset(const wxPoint& offset)
+{
+    mOffset = offset;
+}
+
+wxPoint Shape::GetOffset() const
+{
+    return mOffset;
+}
+
+RectShape::RectShape(const wxPoint& start): Shape(start)
+{
+    
+}
+
+void RectShape::Draw(wxDC& dc) const
+{
+    dc.SetPen(mPen);
+    dc.SetBrush(mBrush);
+    wxRect rect(mTopLeft + mOffset, mBotRight + mOffset);
+    dc.DrawRectangle(rect);
+}
+
+EllipseShape::EllipseShape(const wxPoint& start): Shape(start)
+{
+    
+}
+
+void EllipseShape::Draw(wxDC& dc) const
+{
+    dc.SetPen(mPen);
+    dc.SetBrush(mBrush);
+    wxRect rect(mTopLeft + mOffset, mBotRight + mOffset);
+    dc.DrawEllipse(rect);
+}
+
+LineShape::LineShape(const wxPoint& start): Shape(start)
+{
+    
+}
+
+void LineShape::Draw(wxDC& dc) const
+{
+    dc.SetPen(mPen);
+    dc.SetBrush(mBrush);
+    dc.DrawLine(mStartPoint + mOffset, mEndPoint + mOffset);
+}
+
+PencilShape::PencilShape(const wxPoint& start): Shape(start)
+{
+    mPoints.push_back(start);
+}
+
+void PencilShape::Draw(wxDC& dc) const
+{
+    dc.SetPen(mPen);
+    dc.SetBrush(mBrush);
+    if(mPoints.size() == 1)
+    {
+        dc.DrawPoint(mPoints[0]);
+    }
+    else
+    {
+        dc.DrawLines(static_cast<int>(mPoints.size()), mPoints.data(), mOffset.x, mOffset.y);
+    }
+}
+
+void PencilShape::Update(const wxPoint& newPoint)
+{
+    Shape::Update(newPoint);
+    mPoints.push_back(newPoint);
+}
+
+void PencilShape::Finalize()
+{
+    mTopLeft = mPoints[0];
+    mBotRight = mPoints[0];
+    for(int i = 1; i < mPoints.size(); i++)
+    {
+        if(mPoints[i].x < mTopLeft.x)
+        {
+            mTopLeft.x = mPoints[i].x;
+        }
+        if(mPoints[i].y < mTopLeft.y)
+        {
+            mTopLeft.y = mPoints[i].y;
+        }
+        if(mPoints[i].x > mBotRight.x)
+        {
+            mBotRight.x = mPoints[i].x;
+        }
+        if(mPoints[i].y > mBotRight.y)
+        {
+            mBotRight.y = mPoints[i].y;
+        }
+    }
 }

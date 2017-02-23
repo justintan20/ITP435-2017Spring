@@ -34,6 +34,8 @@ public:
 	virtual void Undo(std::shared_ptr<PaintModel> model) = 0;
 	// Used to "redo" the command
 	virtual void Redo(std::shared_ptr<PaintModel> model) = 0;
+    
+    virtual std::shared_ptr<Shape> GetShape();
 	virtual ~Command() { }
 protected:
 	wxPoint mStartPoint;
@@ -41,6 +43,61 @@ protected:
 	std::shared_ptr<Shape> mShape;
 };
 
+class DrawCommand : public Command
+{
+public:
+    DrawCommand(const wxPoint& start, std::shared_ptr<Shape> shape);
+    void Update(const wxPoint& newPoint) override;
+    void Finalize(std::shared_ptr<PaintModel> model) override;
+    void Undo(std::shared_ptr<PaintModel> model) override;
+    void Redo(std::shared_ptr<PaintModel> model) override;
+};
+
+class SetPenCommand : public Command
+{
+public:
+    SetPenCommand(const wxPoint& start, std::shared_ptr<Shape> shape);
+    void Finalize(std::shared_ptr<PaintModel> model) override;
+    void Undo(std::shared_ptr<PaintModel> model) override;
+    void Redo(std::shared_ptr<PaintModel> model) override;
+private:
+    wxPen mOldPen;
+    wxPen mNewPen;
+};
+
+class SetBrushCommand : public Command
+{
+public:
+    SetBrushCommand(const wxPoint& start, std::shared_ptr<Shape> shape);
+    void Finalize(std::shared_ptr<PaintModel> model) override;
+    void Undo(std::shared_ptr<PaintModel> model) override;
+    void Redo(std::shared_ptr<PaintModel> model) override;
+private:
+    wxBrush mOldBrush;
+    wxBrush mNewBrush;
+};
+
+class DeleteCommand: public Command
+{
+public:
+    DeleteCommand(const wxPoint& start, std::shared_ptr<Shape> shape);
+    void Finalize(std::shared_ptr<PaintModel> model) override;
+    void Undo(std::shared_ptr<PaintModel> model) override;
+    void Redo(std::shared_ptr<PaintModel> model) override;
+};
+
+class MoveCommand : public Command
+{
+public:
+    MoveCommand(const wxPoint& start, std::shared_ptr<Shape> shape);
+    void Update(const wxPoint& newPoint) override;
+    void Finalize(std::shared_ptr<PaintModel> model) override;
+    void Undo(std::shared_ptr<PaintModel> model) override;
+    void Redo(std::shared_ptr<PaintModel> model) override;
+private:
+    wxPoint mOldPoint;
+    wxPoint mNewPoint;
+};
 // Factory method to help create a particular command
 struct CommandFactory
 {

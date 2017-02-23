@@ -52,6 +52,8 @@ private:
 	void ToggleTool(EventID toolID);
 
 	void SetCursor(CursorType type);
+    
+    void UpdateUndoRedoButtons();
 	
 	wxDECLARE_EVENT_TABLE();
 private:

@@ -12,6 +12,7 @@
 #include <wx/filedlg.h>
 #include "PaintDrawPanel.h"
 #include "PaintModel.h"
+#include <wx/wfstream.h>
 
 wxBEGIN_EVENT_TABLE(PaintFrame, wxFrame)
 	EVT_MENU(wxID_EXIT, PaintFrame::OnExit)
@@ -175,12 +176,27 @@ void PaintFrame::OnExit(wxCommandEvent& event)
 void PaintFrame::OnNew(wxCommandEvent& event)
 {
 	mModel->New();
+    UpdateUndoRedoButtons();
 	mPanel->PaintNow();
 }
 
 void PaintFrame::OnExport(wxCommandEvent& event)
 {
 	// TODO
+    wxFileDialog dialog(this, _("Save File"), "", "", "PNG(*.png)|*.png|JPEG(*.jpeg)|*.jpeg|BMP(*.bmp)|*.bmp",wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+    if (dialog.ShowModal() == wxID_CANCEL)
+    {
+        return;     // the user changed idea...
+    }
+    // save the current contents in the file;
+    // this can be done with e.g. wxWidgets output streams:
+    wxFileOutputStream output_stream(dialog.GetPath());
+    if (!output_stream.IsOk())
+    {
+        wxLogError("Cannot save current contents in file '%s'.", dialog.GetPath());
+        return;
+    }
+    mModel->Export(dialog.GetPath(), mPanel->GetSize());
 }
 
 void PaintFrame::OnImport(wxCommandEvent& event)
@@ -191,36 +207,106 @@ void PaintFrame::OnImport(wxCommandEvent& event)
 void PaintFrame::OnUndo(wxCommandEvent& event)
 {
 	// TODO
+    mModel->Undo();
+    mPanel->PaintNow();
+    UpdateUndoRedoButtons();
 }
 
 void PaintFrame::OnRedo(wxCommandEvent& event)
 {
 	// TODO
+    mModel->Redo();
+    mPanel->PaintNow();
+    UpdateUndoRedoButtons();
 }
 
 void PaintFrame::OnUnselect(wxCommandEvent& event)
 {
 	// TODO
+    mModel->SelectShape(wxPoint());
+    mEditMenu->Enable(ID_Unselect, false);
+    mEditMenu->Enable(ID_Delete, false);
+    mPanel->PaintNow();
 }
 
 void PaintFrame::OnDelete(wxCommandEvent& event)
 {
 	// TODO
+    mModel->CreateCommand(CM_Delete, wxPoint());
+    mModel->FinalizeCommand();
+    mEditMenu->Enable(ID_Unselect, false);
+    mEditMenu->Enable(ID_Delete, false);
+    mPanel->PaintNow();
 }
 
 void PaintFrame::OnSetPenColor(wxCommandEvent& event)
 {
 	// TODO
+    wxColourData data;
+    data.SetColour(mModel->GetPenColour());
+    wxColourDialog dialog(this, &data);
+    if(dialog.ShowModal() == wxID_OK)
+    {
+        mModel->SetPenColour(dialog.GetColourData().GetColour());
+        if(mModel->GetSelectedShape() != nullptr)
+        {
+            mModel->CreateCommand(CM_SetPen, wxPoint());
+            mModel->FinalizeCommand();
+            mPanel->PaintNow();
+        }
+    }
 }
 
 void PaintFrame::OnSetPenWidth(wxCommandEvent& event)
 {
 	// TODO
+    wxTextEntryDialog dialog;
+    wxWindow window;
+    dialog.Create(&window, "Enter Pen Width (1-10):");
+    if(dialog.ShowModal() == wxID_OK)
+    {
+        std::string input = dialog.GetValue().ToStdString();
+        bool isNum = true;
+        for(int i = 0; i < input.size(); i++)
+        {
+            if(!isdigit(input[i]))
+            {
+                isNum = false;
+            }
+        }
+        if(isNum)
+        {
+            int width = std::stoi(input);
+            if(width >= 1 && width <= 10)
+            {
+                mModel->SetPenWidth(width);
+                if(mModel->GetSelectedShape() != nullptr)
+                {
+                    mModel->CreateCommand(CM_SetPen, wxPoint());
+                    mModel->FinalizeCommand();
+                    mPanel->PaintNow();
+                }
+            }
+        }
+    }
 }
 
 void PaintFrame::OnSetBrushColor(wxCommandEvent& event)
 {
 	// TODO
+    wxColourData data;
+    data.SetColour(mModel->GetBrushColour());
+    wxColourDialog dialog(this, &data);
+    if(dialog.ShowModal() == wxID_OK)
+    {
+        mModel->SetBrushColour(dialog.GetColourData().GetColour());
+        if(mModel->GetSelectedShape() != nullptr)
+        {
+            mModel->CreateCommand(CM_SetBrush, wxPoint());
+            mModel->FinalizeCommand();
+            mPanel->PaintNow();
+        }
+    }
 }
 
 void PaintFrame::OnMouseButton(wxMouseEvent& event)
@@ -228,16 +314,68 @@ void PaintFrame::OnMouseButton(wxMouseEvent& event)
 	if (event.LeftDown())
 	{
 		// TODO: This is when the left mouse button is pressed
+        if (mCurrentTool == ID_DrawRect)
+        {
+            mModel->CreateCommand(CM_DrawRect, event.GetPosition());
+            mPanel->PaintNow();
+        }
+        else if(mCurrentTool == ID_DrawEllipse)
+        {
+            mModel->CreateCommand(CM_DrawEllipse, event.GetPosition());
+            mPanel->PaintNow();
+        }
+        else if(mCurrentTool == ID_DrawLine)
+        {
+            mModel->CreateCommand(CM_DrawLine, event.GetPosition());
+            mPanel->PaintNow();
+        }
+        else if(mCurrentTool == ID_DrawPencil)
+        {
+            mModel->CreateCommand(CM_DrawPencil, event.GetPosition());
+            mPanel->PaintNow();
+        }
+        else if(mCurrentTool == ID_Selector)
+        {
+            mModel->SelectShape(event.GetPosition());
+            mPanel->PaintNow();
+        }
 	}
 	else if (event.LeftUp())
 	{
 		// TODO: This is when the left mouse button is released
+        if(mModel->HasActiveCommand() == true)
+        {
+            mModel->UpdateCommand(event.GetPosition());
+            mModel->FinalizeCommand();
+            mPanel->PaintNow();
+        }
 	}
+    UpdateUndoRedoButtons();
+    if(mModel->GetSelectedShape() != nullptr)
+    {
+        mEditMenu->Enable(ID_Unselect, true);
+        mEditMenu->Enable(ID_Delete, true);
+    }
 }
 
 void PaintFrame::OnMouseMove(wxMouseEvent& event)
 {
 	// TODO: This is when the mouse is moved inside the drawable area
+    if(event.LeftDown())
+    {
+        mModel->SelectShape(event.GetPosition());
+        if(mModel->GetSelectedShape() != nullptr)
+        {
+            mModel->CreateCommand(CM_Move, event.GetPosition());
+            mModel->UpdateCommand(event.GetPosition());
+            mPanel->PaintNow();
+        }
+    }
+    if(mModel->HasActiveCommand() == true)
+    {
+        mModel->UpdateCommand(event.GetPosition());
+        mPanel->PaintNow();
+    }
 }
 
 void PaintFrame::ToggleTool(EventID toolID)
@@ -283,4 +421,28 @@ void PaintFrame::OnSelectTool(wxCommandEvent& event)
 		SetCursor(CU_Default);
 		break;
 	}
+}
+
+void PaintFrame::UpdateUndoRedoButtons()
+{
+    if(mModel->CanUndo() == true)
+    {
+        mToolbar->EnableTool(wxID_UNDO, true);
+        mEditMenu->Enable(wxID_UNDO, true);
+    }
+    else if(mModel->CanUndo() == false)
+    {
+        mToolbar->EnableTool(wxID_UNDO, false);
+        mEditMenu->Enable(wxID_UNDO, false);
+    }
+    if(mModel->CanRedo() == true)
+    {
+        mToolbar->EnableTool(wxID_REDO, true);
+        mEditMenu->Enable(wxID_REDO, true);
+    }
+    else if(mModel->CanRedo() == false)
+    {
+        mToolbar->EnableTool(wxID_REDO, false);
+        mEditMenu->Enable(wxID_REDO, false);
+    }
 }
