@@ -9,6 +9,7 @@
 #include "DNANeedWun.h"
 #include <vector>
 #include <fstream>
+#include <wx/busyinfo.h>
 
 DNANeedWun::DNANeedWun(const std::string& fileName1, const std::string& fileName2)
 {
@@ -46,6 +47,7 @@ void DNANeedWun::Run()
             int matchScore;
             int leftScore;
             int aboveScore;
+            int leftAboveScore;
             if(sequence1.at(col - 1) == sequence2.at(row - 1))
             {
                 matchScore = 1;
@@ -54,11 +56,12 @@ void DNANeedWun::Run()
             {
                 matchScore = -1;
             }
+            leftAboveScore = scoreGrid[row - 1][col -1] + matchScore;
             leftScore = scoreGrid[row][col - 1] - 1;
-            aboveScore = scoreGrid[row-1][col] - 1;
-            if(matchScore >= leftScore && matchScore >= aboveScore)
+            aboveScore = scoreGrid[row - 1][col] - 1;
+            if(leftAboveScore >= leftScore && leftAboveScore >= aboveScore)
             {
-                highestScore = matchScore;
+                highestScore = leftAboveScore;
                 pathGrid[row][col] = ABOVE_LEFT;
             }
             else if(leftScore >= aboveScore)
@@ -83,20 +86,20 @@ void DNANeedWun::Run()
         {
             mOptimal1 += sequence1.at(currCol - 1);
             mOptimal2 += sequence2.at(currRow - 1);
-            currRow = currRow - 1;
-            currCol = currCol - 1;
+            currRow--;
+            currCol--;
         }
         else if (pathGrid[currRow][currCol] == LEFT)
         {
             mOptimal1 += sequence1.at(currCol - 1);
             mOptimal2 += '_';
-            currCol = currCol - 1;
+            currCol--;
         }
         else
         {
             mOptimal1 += '_';
             mOptimal2 += sequence2.at(currRow - 1);
-            currRow = currRow - 1;
+            currRow--;
         }
     }
     std::reverse(mOptimal1.begin(),mOptimal1.end());

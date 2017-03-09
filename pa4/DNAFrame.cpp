@@ -103,6 +103,7 @@ void DNAFrame::OnAlignment(wxCommandEvent& event)
         std::string fileName1 = dialog->GetInputAPath();
         std::string fileName2 = dialog->GetInputBPath();
         std::shared_ptr<DNANeedWun> alignment = std::make_shared<DNANeedWun>(fileName1,fileName2);
+        wxBusyInfo info("Calculating pairwise match...", this);
         alignment->Run();
         alignment->WriteResults(dialog->GetOutputPath());
     }
