@@ -11,6 +11,8 @@
 #include <wx/timer.h>
 #include <wx/menu.h>
 #include <memory>
+#include "DNAData.h"
+#include "DNATranslate.h"
 
 class DNAFrame : public wxFrame
 {
@@ -20,6 +22,7 @@ private:
 	void OnExit(wxCommandEvent& event);
 	void OnNew(wxCommandEvent& event);
 	void OnAminoHist(wxCommandEvent& event);
+    void OnAlignment(wxCommandEvent& event);
 	
 	wxDECLARE_EVENT_TABLE();
 private:
@@ -27,4 +30,6 @@ private:
 	class DNADrawPanel* mPanel;
 	
 	// Variables here
+    std::shared_ptr<DNAData> mData;
+    std::shared_ptr<DNATranslate> mTranslator;
 };

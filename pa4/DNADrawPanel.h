@@ -12,20 +12,24 @@
 #include <wx/frame.h>
 #include <string>
 #include <memory>
+#include "DNATranslate.h"
 
 class DNADrawPanel : public wxPanel
 {
 public:
 	DNADrawPanel(wxFrame* parent);
 	void PaintNow();
+    std::shared_ptr<DNATranslate> GetTranslated() const;
 
 protected:
 	void PaintEvent(wxPaintEvent & evt);
 	void Render(wxDC& dc);
+    void DrawAcid(wxDC& dc, const std::string& name, int num, const wxColour& color, const wxBrush& brush, int y) const;
  
 	DECLARE_EVENT_TABLE()
 	
 public:
 	// Variables here
+    std::shared_ptr<DNATranslate> mTranslated;
 };
 

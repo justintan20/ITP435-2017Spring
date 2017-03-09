@@ -17,16 +17,19 @@
 #include "DNADrawPanel.h"
 #include "Exceptions.h"
 #include "DNAAlignDlg.h"
+#include "DNANeedWun.h"
 
 enum
 {
 	ID_AMINO_HIST=1000,
+    ID_ALIGNMENT=2000
 };
 
 wxBEGIN_EVENT_TABLE(DNAFrame, wxFrame)
 	EVT_MENU(wxID_EXIT, DNAFrame::OnExit)
 	EVT_MENU(wxID_NEW, DNAFrame::OnNew)
 	EVT_MENU(ID_AMINO_HIST, DNAFrame::OnAminoHist)
+    EVT_MENU(ID_ALIGNMENT, DNAFrame::OnAlignment)
 wxEND_EVENT_TABLE()
 
 DNAFrame::DNAFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
@@ -37,6 +40,7 @@ DNAFrame::DNAFrame(const wxString& title, const wxPoint& pos, const wxSize& size
 	menuFile->Append(wxID_NEW);
 	menuFile->Append(ID_AMINO_HIST, "Amino Acid Histogram...",
 					 "Create a histogram from a FASTA file.");
+    menuFile->Append(ID_ALIGNMENT, "Pairwise Alignment...");
 	menuFile->Append(wxID_EXIT);
 	
 	wxMenuBar* menuBar = new wxMenuBar;
@@ -70,4 +74,36 @@ void DNAFrame::OnNew(wxCommandEvent& event)
 void DNAFrame::OnAminoHist(wxCommandEvent& event)
 {
 	// TODO: Implement (File>Amino Acid Histogram...)
+    wxFileDialog dialog(this, _("Amino Acid Histogram"),"./data","","FASTA(*.fasta)|*.fasta");
+    if(dialog.ShowModal() == wxID_OK)
+    {
+        std::string fileName = dialog.GetPath().ToStdString();
+        try
+        {
+            mTranslator = std::make_shared<DNATranslate>();
+            mData = std::make_shared<DNAData>(fileName);
+            mTranslator->SetHeader(mData->GetHeader());
+            mTranslator->Translate(mData->GetSequence());
+            mPanel->GetTranslated()->SetData(mTranslator);
+            mPanel->PaintNow();
+            
+        }
+        catch(FileLoadExcept)
+        {
+            wxMessageBox("FASTA file is invalid", "Error", wxOK | wxICON_ERROR);
+        }
+    }
+}
+
+void DNAFrame::OnAlignment(wxCommandEvent& event)
+{
+    std::shared_ptr<DNAAlignDlg> dialog = std::make_shared<DNAAlignDlg>();
+    if(dialog->ShowModal() == wxID_OK)
+    {
+        std::string fileName1 = dialog->GetInputAPath();
+        std::string fileName2 = dialog->GetInputBPath();
+        std::shared_ptr<DNANeedWun> alignment = std::make_shared<DNANeedWun>(fileName1,fileName2);
+        alignment->Run();
+        alignment->WriteResults(dialog->GetOutputPath());
+    }
 }

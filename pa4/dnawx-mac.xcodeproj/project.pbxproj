@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19D1D5851E6E4D5A00688120 /* DNAData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D1D5831E6E4D5A00688120 /* DNAData.cpp */; };
+		19D1D5881E6E98D600688120 /* DNATranslate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D1D5861E6E98D600688120 /* DNATranslate.cpp */; };
+		19D1D58B1E70B2DD00688120 /* DNANeedWun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D1D5891E70B2DD00688120 /* DNANeedWun.cpp */; };
 		92296D6F1B86CE0800FED746 /* DNAAlignDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D641B86CE0800FED746 /* DNAAlignDlg.cpp */; };
 		92296D701B86CE0800FED746 /* DNAApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D661B86CE0800FED746 /* DNAApp.cpp */; };
 		92296D711B86CE0800FED746 /* DNADrawPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D681B86CE0800FED746 /* DNADrawPanel.cpp */; };
@@ -28,6 +31,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		19D1D5831E6E4D5A00688120 /* DNAData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DNAData.cpp; sourceTree = SOURCE_ROOT; };
+		19D1D5841E6E4D5A00688120 /* DNAData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DNAData.h; sourceTree = SOURCE_ROOT; };
+		19D1D5861E6E98D600688120 /* DNATranslate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DNATranslate.cpp; sourceTree = SOURCE_ROOT; };
+		19D1D5871E6E98D600688120 /* DNATranslate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DNATranslate.h; sourceTree = SOURCE_ROOT; };
+		19D1D5891E70B2DD00688120 /* DNANeedWun.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DNANeedWun.cpp; sourceTree = SOURCE_ROOT; };
+		19D1D58A1E70B2DD00688120 /* DNANeedWun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DNANeedWun.h; sourceTree = SOURCE_ROOT; };
 		92296D641B86CE0800FED746 /* DNAAlignDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DNAAlignDlg.cpp; sourceTree = SOURCE_ROOT; };
 		92296D651B86CE0800FED746 /* DNAAlignDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DNAAlignDlg.h; sourceTree = SOURCE_ROOT; };
 		92296D661B86CE0800FED746 /* DNAApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DNAApp.cpp; sourceTree = SOURCE_ROOT; };
@@ -109,6 +118,10 @@
 			children = (
 				92296D641B86CE0800FED746 /* DNAAlignDlg.cpp */,
 				92296D651B86CE0800FED746 /* DNAAlignDlg.h */,
+				19D1D5831E6E4D5A00688120 /* DNAData.cpp */,
+				19D1D5841E6E4D5A00688120 /* DNAData.h */,
+				19D1D5861E6E98D600688120 /* DNATranslate.cpp */,
+				19D1D5871E6E98D600688120 /* DNATranslate.h */,
 				92296D661B86CE0800FED746 /* DNAApp.cpp */,
 				92296D671B86CE0800FED746 /* DNAApp.h */,
 				92296D681B86CE0800FED746 /* DNADrawPanel.cpp */,
@@ -118,6 +131,8 @@
 				92296D6C1B86CE0800FED746 /* Exceptions.h */,
 				92296D6D1B86CE0800FED746 /* Timer.cpp */,
 				92296D6E1B86CE0800FED746 /* Timer.h */,
+				19D1D5891E70B2DD00688120 /* DNANeedWun.cpp */,
+				19D1D58A1E70B2DD00688120 /* DNANeedWun.h */,
 			);
 			path = "dnawx-mac";
 			sourceTree = "<group>";
@@ -178,11 +193,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19D1D58B1E70B2DD00688120 /* DNANeedWun.cpp in Sources */,
 				92296D711B86CE0800FED746 /* DNADrawPanel.cpp in Sources */,
+				19D1D5881E6E98D600688120 /* DNATranslate.cpp in Sources */,
 				92296D6F1B86CE0800FED746 /* DNAAlignDlg.cpp in Sources */,
 				92296D701B86CE0800FED746 /* DNAApp.cpp in Sources */,
 				92296D731B86CE0800FED746 /* Timer.cpp in Sources */,
 				92296D721B86CE0800FED746 /* DNAFrame.cpp in Sources */,
+				19D1D5851E6E4D5A00688120 /* DNAData.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
