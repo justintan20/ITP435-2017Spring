@@ -13,6 +13,7 @@
 
 DNANeedWun::DNANeedWun(const std::string& fileName1, const std::string& fileName2)
 {
+    //load data and initialize variables
     mData1 = std::make_shared<DNAData>(fileName1);
     mData2 = std::make_shared<DNAData>(fileName2);
     mOptimal1 = "";
@@ -21,13 +22,16 @@ DNANeedWun::DNANeedWun(const std::string& fileName1, const std::string& fileName
 
 void DNANeedWun::Run()
 {
+    //get sequence strings
     std::string sequence1 = mData1->GetSequence();
     std::string sequence2 = mData2->GetSequence();
+    //initialize dimensions
     unsigned long length1 = sequence1.size() + 1;
     unsigned long length2 = sequence2.size() + 1;
-
+    //create grids for score and path keeping
     std::vector<std::vector<short>> scoreGrid(length2, std::vector<short>(length1));
-    std::vector<std::vector<Direction>> pathGrid(length2, std::vector<Direction>(length1));;
+    std::vector<std::vector<Direction>> pathGrid(length2, std::vector<Direction>(length1));
+    //initialize values
     scoreGrid[0][0] = 0;
     for(int i = 1; i < length1; i++)
     {
@@ -39,15 +43,18 @@ void DNANeedWun::Run()
         scoreGrid[j][0] = -1*j;
         pathGrid[j][0] = ABOVE;
     }
+    //calculate scores one by one
     for(int row = 1; row < length2; row++)
     {
         for(int col = 1; col < length1; col++)
         {
-            int highestScore;
-            int matchScore;
-            int leftScore;
-            int aboveScore;
-            int leftAboveScore;
+            //initialize variables
+            short highestScore;
+            short matchScore;
+            short leftScore;
+            short aboveScore;
+            short leftAboveScore;
+            //check if match
             if(sequence1.at(col - 1) == sequence2.at(row - 1))
             {
                 matchScore = 1;
@@ -56,9 +63,11 @@ void DNANeedWun::Run()
             {
                 matchScore = -1;
             }
+            //find 3 scores
             leftAboveScore = scoreGrid[row - 1][col -1] + matchScore;
             leftScore = scoreGrid[row][col - 1] - 1;
             aboveScore = scoreGrid[row - 1][col] - 1;
+            //find largest scores
             if(leftAboveScore >= leftScore && leftAboveScore >= aboveScore)
             {
                 highestScore = leftAboveScore;
@@ -74,14 +83,19 @@ void DNANeedWun::Run()
                 highestScore = aboveScore;
                 pathGrid[row][col] = ABOVE;
             }
+            //set current to highest score
             scoreGrid[row][col] = highestScore;
         }
     }
+    //set final score
     mFinalScore = scoreGrid[length2 - 1][length1 - 1];
+    //start findning path point
     unsigned long currRow = length2 - 1;
     unsigned long currCol = length1 - 1;
+    //keep going through path until at (0,0)
     while(currRow != 0 || currCol != 0)
     {
+        //check which way path goes
         if(pathGrid[currRow][currCol] == ABOVE_LEFT)
         {
             mOptimal1 += sequence1.at(currCol - 1);
@@ -102,17 +116,21 @@ void DNANeedWun::Run()
             currRow--;
         }
     }
+    //reverse strings to get optimal sequences
     std::reverse(mOptimal1.begin(),mOptimal1.end());
     std::reverse(mOptimal2.begin(),mOptimal2.end());
 }
 
 void DNANeedWun::WriteResults(const std::string& fileName) const
 {
+    //create output file
     std::ofstream file(fileName);
     if(file.is_open())
     {
+        //write headers and score
         file << "A: " << mData1->GetHeader() << "\nB: " << mData2->GetHeader() << "\nScore: " << mFinalScore << "\n" << std::endl;
         std::string linkString = "";
+        //find links
         for(int i = 0; i < mOptimal1.size(); i++)
         {
             if((mOptimal1.at(i) == mOptimal2.at(i)) && mOptimal1.at(i) != '_')
@@ -124,6 +142,7 @@ void DNANeedWun::WriteResults(const std::string& fileName) const
                 linkString += ' ';
             }
         }
+        //output 70 per line
         int lines = static_cast<int>(mOptimal1.size()) / 70;
         int remainder = mOptimal1.size() % 70;
         for(int j = 0; j < lines; j++)

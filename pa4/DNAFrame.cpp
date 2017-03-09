@@ -18,6 +18,8 @@
 #include "Exceptions.h"
 #include "DNAAlignDlg.h"
 #include "DNANeedWun.h"
+#include "Timer.h"
+#include <iostream>
 
 enum
 {
@@ -73,11 +75,12 @@ void DNAFrame::OnNew(wxCommandEvent& event)
 
 void DNAFrame::OnAminoHist(wxCommandEvent& event)
 {
-	// TODO: Implement (File>Amino Acid Histogram...)
+	// Implement (File>Amino Acid Histogram...)
     wxFileDialog dialog(this, _("Amino Acid Histogram"),"./data","","FASTA(*.fasta)|*.fasta");
     if(dialog.ShowModal() == wxID_OK)
     {
         std::string fileName = dialog.GetPath().ToStdString();
+        //translate with regards to exception
         try
         {
             mTranslator = std::make_shared<DNATranslate>();
@@ -97,14 +100,21 @@ void DNAFrame::OnAminoHist(wxCommandEvent& event)
 
 void DNAFrame::OnAlignment(wxCommandEvent& event)
 {
+    //open dialog
     std::shared_ptr<DNAAlignDlg> dialog = std::make_shared<DNAAlignDlg>();
     if(dialog->ShowModal() == wxID_OK)
     {
+        //do alignment for two given files
         std::string fileName1 = dialog->GetInputAPath();
         std::string fileName2 = dialog->GetInputBPath();
         std::shared_ptr<DNANeedWun> alignment = std::make_shared<DNANeedWun>(fileName1,fileName2);
-        wxBusyInfo info("Calculating pairwise match...", this);
+        //keep track of time
+        Timer time;
+        time.Start();
         alignment->Run();
+        double seconds = time.GetElapsed();
+        std::cout << "Time used: " << seconds << std::endl;
+        //output results to file
         alignment->WriteResults(dialog->GetOutputPath());
     }
 }

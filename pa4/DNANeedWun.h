@@ -12,6 +12,7 @@
 #include <string>
 #include "DNAData.h"
 
+//enum for path
 enum Direction : char
 {
     ABOVE_LEFT,
@@ -27,6 +28,7 @@ public:
     void WriteResults(const std::string& fileName) const;
     
 private:
+    //member variables
     std::shared_ptr<DNAData> mData1;
     std::shared_ptr<DNAData> mData2;
     std::string mOptimal1;

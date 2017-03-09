@@ -7,7 +7,6 @@
 //
 
 #include "DNATranslate.h"
-#include <iostream>
 
 DNATranslate::DNATranslate()
 {
@@ -26,6 +25,7 @@ std::string DNATranslate::GetHeader() const
 
 void DNATranslate::SetData(std::shared_ptr<DNATranslate> other)
 {
+    //set all data the same and inputed data
     mNumTotal = other->GetTotal();
     mNumA = other->GetA();
     mNumC = other->GetC();
@@ -53,13 +53,11 @@ void DNATranslate::SetData(std::shared_ptr<DNATranslate> other)
 void DNATranslate::Translate(const std::string& sequence)
 {
     int currentState = 0;
-    std::cout << sequence.size() << std::endl;
     for(int i = 0; i < sequence.size(); i++)
     {
-        int
-        
-        index = 0;
+        int index = 0;
         char letter = sequence.at(i);
+        //check which letter
         switch (letter)
         {
             case 'T':
@@ -75,7 +73,9 @@ void DNATranslate::Translate(const std::string& sequence)
                 index = 3;
                 break;
         }
+        //get corresponding state
         currentState = mStateMachine[currentState][index];
+        //if is amino acid, update values and go to state 3
         switch (currentState)
         {
             case 'F':

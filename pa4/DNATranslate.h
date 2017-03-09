@@ -15,9 +15,12 @@ class DNATranslate
 {
 public:
     DNATranslate();
+    //translate function
     void Translate(const std::string& sequence);
+    //setters
     void SetData(std::shared_ptr<DNATranslate> other);
     void SetHeader(const std::string& header);
+    //getters
     std::string GetHeader() const;
     int GetA() const;
     int GetC() const;
@@ -41,6 +44,7 @@ public:
     int GetY() const;
     int GetTotal() const;
 private:
+    //state machine
     const int mStateMachine[24][4] =
     {
         //T,C,A,G
@@ -93,6 +97,7 @@ private:
         //23
         {'G','G','G','G'}
     };
+    //number of each amino acid
     int mNumF = 0;
     int mNumL = 0;
     int mNumI = 0;
@@ -114,5 +119,6 @@ private:
     int mNumR = 0;
     int mNumG = 0;
     int mNumTotal = 0;
+    //data header
     std::string mHeader;
 };

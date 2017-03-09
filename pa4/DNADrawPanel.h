@@ -24,6 +24,7 @@ public:
 protected:
 	void PaintEvent(wxPaintEvent & evt);
 	void Render(wxDC& dc);
+    //helper for Render
     void DrawAcid(wxDC& dc, const std::string& name, int num, const wxColour& color, const wxBrush& brush, int y) const;
  
 	DECLARE_EVENT_TABLE()

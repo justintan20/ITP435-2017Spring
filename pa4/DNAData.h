@@ -14,9 +14,11 @@
 class DNAData
 {
 private:
+    //member variables
     std::string mHeader;
     std::string mSequence;
 public:
+    //load data with constructor
     DNAData(const std::string& fileName);
     std::string GetSequence() const;
     std::string GetHeader() const;

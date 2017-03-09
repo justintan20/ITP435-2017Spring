@@ -41,12 +41,13 @@ void DNADrawPanel::Render(wxDC& dc)
 	// Clear
 	dc.SetBackground(*wxWHITE_BRUSH);
 	dc.Clear();
-	// TODO: Draw histogram, if one has been generated
+	// Draw histogram, if one has been generated
     if(mTranslated->GetTotal() != 0){
+        //set initial colots
         dc.SetPen(*wxBLACK_PEN);
         dc.SetTextBackground(*wxBLACK);
-        dc.SetBrush(*wxRED_BRUSH);
         dc.DrawText(mTranslated->GetHeader(), 0, 0);
+        //draw histogram for each amino acid
         DrawAcid(dc, "Alanine", mTranslated->GetA(), *wxRED, *wxRED_BRUSH, 50);
         DrawAcid(dc, "Cysteine", mTranslated->GetC(), *wxBLUE, *wxBLUE_BRUSH, 80);
         DrawAcid(dc, "Aspartic Acid", mTranslated->GetD(), *wxGREEN, *wxGREEN_BRUSH, 110);
@@ -73,8 +74,10 @@ void DNADrawPanel::Render(wxDC& dc)
 
 void DNADrawPanel::DrawAcid(wxDC& dc, const std::string& name, int num, const wxColour& color, const wxBrush& brush, int y) const
 {
+    //set given colors
     dc.SetTextForeground(color);
     dc.SetBrush(brush);
+    //calculate percentage
     double percent = static_cast<double>(num) / static_cast<double>(mTranslated->GetTotal()) * 100;
     std::stringstream output;
     int precision = 3;
@@ -82,8 +85,10 @@ void DNADrawPanel::DrawAcid(wxDC& dc, const std::string& name, int num, const wx
     {
         precision = 4;
     }
+    //output info
     output << name << " " << std::setprecision(3) << percent << "% (" << num << ")";
     dc.DrawText(output.str(), 0, y);
+    //draw histogram
     dc.DrawRectangle(200, y, percent*45, 30);
     
 }
