@@ -12,6 +12,7 @@
 #include <wx/menu.h>
 #include "Machine.h"
 #include "Traits.h"
+#include "ZomWorld.h"
 
 class ZomFrame : public wxFrame
 {
@@ -23,6 +24,8 @@ private:
 	void OnNew(wxCommandEvent& event);
 	void OnSimStart(wxCommandEvent& event);
 	void OnTurnTimer(wxTimerEvent& event);
+    void OnLoadZom(wxCommandEvent& event);
+    void OnLoadSurvivor(wxCommandEvent& event);
 	
 	wxDECLARE_EVENT_TABLE();
 private:
@@ -36,9 +39,10 @@ private:
 	wxTimer* mTurnTimer;
 	
 	// TEMP CODE TEST MACHINES
-	MachineState zombieTestState;
-	Machine<ZombieTraits> zombieMachine;
+//	MachineState zombieTestState;
+//	Machine<ZombieTraits> zombieMachine;
 	// END TEMP CODE
 	
 	bool mIsActive;
+//    std::shared_ptr<ZomWorld> mWorld;
 };

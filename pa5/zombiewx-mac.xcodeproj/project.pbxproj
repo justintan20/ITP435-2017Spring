@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		195A56101E8C2DD800796455 /* ZomWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 195A560E1E8C2DD800796455 /* ZomWorld.cpp */; };
 		9201D3491A4F688200B0F91F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9201D3481A4F688200B0F91F /* CoreFoundation.framework */; };
 		92296D801B86CE3D00FED746 /* Op.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D761B86CE3D00FED746 /* Op.cpp */; };
 		92296D811B86CE3D00FED746 /* ZomApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92296D7A1B86CE3D00FED746 /* ZomApp.cpp */; };
@@ -27,6 +28,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		195A560E1E8C2DD800796455 /* ZomWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZomWorld.cpp; sourceTree = SOURCE_ROOT; };
+		195A560F1E8C2DD800796455 /* ZomWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZomWorld.h; sourceTree = SOURCE_ROOT; };
 		9201D3481A4F688200B0F91F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		92296D741B86CE3D00FED746 /* Exceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Exceptions.h; sourceTree = SOURCE_ROOT; };
 		92296D751B86CE3D00FED746 /* Machine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Machine.h; sourceTree = SOURCE_ROOT; };
@@ -101,6 +104,8 @@
 				92296D751B86CE3D00FED746 /* Machine.h */,
 				92296D761B86CE3D00FED746 /* Op.cpp */,
 				92296D771B86CE3D00FED746 /* Op.h */,
+				195A560E1E8C2DD800796455 /* ZomWorld.cpp */,
+				195A560F1E8C2DD800796455 /* ZomWorld.h */,
 				92296D781B86CE3D00FED746 /* Singleton.h */,
 				92296D791B86CE3D00FED746 /* Traits.h */,
 				92296D7A1B86CE3D00FED746 /* ZomApp.cpp */,
@@ -169,6 +174,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				195A56101E8C2DD800796455 /* ZomWorld.cpp in Sources */,
 				92296D811B86CE3D00FED746 /* ZomApp.cpp in Sources */,
 				92296D801B86CE3D00FED746 /* Op.cpp in Sources */,
 				92296D831B86CE3D00FED746 /* ZomFrame.cpp in Sources */,
