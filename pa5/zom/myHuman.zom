@@ -1,0 +1,26 @@
+test_zombie,2; kills zombies from afar
+je,15
+test_zombie,1; but tries to run away if close by
+je,17
+test_human,1; kills human if close by
+je,23
+test_passable
+je,25
+test_random
+je,13
+rotate,0
+goto,1
+rotate,1
+goto,1
+ranged_attack
+goto,1
+test_random
+je,21
+rotate,0
+goto,1
+rotate,1
+goto,1
+attack
+goto,1
+forward
+goto,1

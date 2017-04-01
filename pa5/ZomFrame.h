@@ -26,7 +26,8 @@ private:
 	void OnTurnTimer(wxTimerEvent& event);
     void OnLoadZom(wxCommandEvent& event);
     void OnLoadSurvivor(wxCommandEvent& event);
-	
+    void OnReset(wxCommandEvent& event);
+    void OnRandomize(wxCommandEvent& event);
 	wxDECLARE_EVENT_TABLE();
 private:
 	// Panel for drawing
@@ -38,11 +39,5 @@ private:
 	// Turn timer
 	wxTimer* mTurnTimer;
 	
-	// TEMP CODE TEST MACHINES
-//	MachineState zombieTestState;
-//	Machine<ZombieTraits> zombieMachine;
-	// END TEMP CODE
-	
 	bool mIsActive;
-//    std::shared_ptr<ZomWorld> mWorld;
 };

@@ -13,7 +13,7 @@ public:
 		, mParam(parameter)
 	{ }
 
-	void DebugOutput(MachineState& state);
+	void DebugOutput(MachineState& state) noexcept;
 
 	virtual void Execute(MachineState& state) = 0;
 
@@ -101,5 +101,37 @@ struct OpRangedAttack : Op
     OpRangedAttack() : Op("OpRangedAttack", 0)
     {}
 
+    virtual void Execute(MachineState& state) override;
+};
+
+struct OpAttack : Op
+{
+    OpAttack() : Op("OpAttack", 0)
+    {}
+    
+    virtual void Execute(MachineState& state) override;
+};
+
+struct OpEndTurn : Op
+{
+    OpEndTurn() : Op("OpEndTurn", 0)
+    {}
+    
+    virtual void Execute(MachineState& state) override;
+};
+
+struct OpTestHuman : Op
+{
+    OpTestHuman(int parameter) : Op("OpTestHuman",parameter)
+    {}
+    
+    virtual void Execute(MachineState& state) override;
+};
+
+struct OpJne : Op
+{
+    OpJne(int parameter) : Op("OpJne",parameter)
+    {}
+    
     virtual void Execute(MachineState& state) override;
 };

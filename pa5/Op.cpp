@@ -83,40 +83,47 @@ void OpRotate::Execute(MachineState& state)
 void OpGoto::Execute(MachineState& state)
 {
 	DebugOutput(state);
-	state.mProgramCounter = mParam;
+    if(mParam <= state.mNumOps)
+    {
+        state.mProgramCounter = mParam;
+    }
+    else
+    {
+        throw InvalidOp();
+    }
 }
 
 void OpForward::Execute(MachineState& state)
 {
     DebugOutput(state);
     int currRow = state.mY / 30;
-    int currCol = state.mY / 30;
+    int currCol = state.mX / 30;
     int original = ZomWorld::get().GetGrid(currRow, currCol);
     switch (state.mFacing)
     {
         case (MachineState::UP) :
-            if(state.mY != 0){
+            if((state.mY != 0)&&(ZomWorld::get().GetGrid(currRow - 1, currCol)==0)){
                 state.mY -= 30;
                 ZomWorld::get().SetGrid(currRow, currCol, 0);
                 ZomWorld::get().SetGrid(currRow - 1, currCol, original);
             }
             break;
         case (MachineState::RIGHT) :
-            if(state.mX != 570){
+            if((state.mX != 570)&&(ZomWorld::get().GetGrid(currRow, currCol + 1)==0)){
                 state.mX += 30;
                 ZomWorld::get().SetGrid(currRow, currCol, 0);
                 ZomWorld::get().SetGrid(currRow, currCol + 1, original);
             }
             break;
         case (MachineState::DOWN) :
-            if(state.mY != 570){
+            if((state.mY != 570)&&(ZomWorld::get().GetGrid(currRow + 1, currCol)==0)){
                 state.mY += 30;
                 ZomWorld::get().SetGrid(currRow, currCol, 0);
                 ZomWorld::get().SetGrid(currRow + 1, currCol, original);
             }
             break;
         case (MachineState::LEFT) :
-            if(state.mX != 0){
+            if((state.mX != 0)&&(ZomWorld::get().GetGrid(currRow, currCol - 1)==0)){
                 state.mX -= 30;
                 ZomWorld::get().SetGrid(currRow, currCol, 0);
                 ZomWorld::get().SetGrid(currRow, currCol - 1, original);
@@ -136,20 +143,36 @@ void OpTestWall::Execute(MachineState& state)
             if(state.mY == 0){
                 state.mTest = true;
             }
+            else
+            {
+                state.mTest = false;
+            }
             break;
         case (MachineState::RIGHT) :
             if(state.mX == 570){
                 state.mTest = true;
+            }
+            else
+            {
+                state.mTest = false;
             }
             break;
         case (MachineState::DOWN) :
             if(state.mY == 570){
                 state.mTest = true;
             }
+            else
+            {
+                state.mTest = false;
+            }
             break;
         case (MachineState::LEFT) :
             if(state.mX == 0){
                 state.mTest = true;
+            }
+            else
+            {
+                state.mTest = false;
             }
             break;
     }
@@ -159,14 +182,20 @@ void OpTestWall::Execute(MachineState& state)
 void OpJe::Execute(MachineState& state)
 {
     DebugOutput(state);
-    if(state.mTest)
+    if(mParam <= state.mNumOps)
     {
-        state.mProgramCounter = mParam;
-        state.mTest = false;
+        if(state.mTest)
+        {
+            state.mProgramCounter = mParam;
+        }
+        else
+        {
+            state.mProgramCounter++;
+        }
     }
     else
     {
-        state.mProgramCounter++;
+        throw InvalidOp();
     }
 }
 
@@ -182,40 +211,79 @@ void OpTestZombie::Execute(MachineState& state)
     DebugOutput(state);
     int currRow = state.mY / 30;
     int currCol = state.mX / 30;
-    switch (state.mFacing)
+    if(mParam!=1 && mParam!=2)
     {
-        case (MachineState::UP) :
-            if(currRow!=0){
-                if(ZomWorld::get().GetGrid(currRow - mParam, currCol) == 1)
-                {
-                    state.mTest = true;
+        throw InvalidOp();
+    }
+    else
+    {
+        switch (state.mFacing)
+        {
+            case (MachineState::UP) :
+                if(currRow > mParam - 1){
+                    if(ZomWorld::get().GetGrid(currRow - mParam, currCol) == 1)
+                    {
+                        state.mTest = true;
+                    }
+                    else
+                    {
+                        state.mTest = false;
+                    }
                 }
-            }
-            break;
-        case (MachineState::RIGHT) :
-            if(currCol!=19){
-                if(ZomWorld::get().GetGrid(currRow, currCol + mParam) == 1)
+                else
                 {
-                    state.mTest = true;
+                    state.mTest = false;
                 }
-            }
-            break;
-        case (MachineState::DOWN) :
-            if(currRow!=19){
-                if(ZomWorld::get().GetGrid(currRow + mParam, currCol) == 1)
+                break;
+            case (MachineState::RIGHT) :
+                if(currCol < 20-mParam){
+                    if(ZomWorld::get().GetGrid(currRow, currCol + mParam) == 1)
+                    {
+                        state.mTest = true;
+                    }
+                    else
+                    {
+                        state.mTest = false;
+                    }
+                }
+                else
                 {
-                    state.mTest = true;
+                    state.mTest = false;
                 }
-            }
-            break;
-        case (MachineState::LEFT) :
-            if(currCol!=0){
-                if(ZomWorld::get().GetGrid(currRow, currCol - mParam) == 1)
+                break;
+            case (MachineState::DOWN) :
+                if(currRow < 20-mParam){
+                    if(ZomWorld::get().GetGrid(currRow + mParam, currCol) == 1)
+                    {
+                        state.mTest = true;
+                    }
+                    else
+                    {
+                        state.mTest = false;
+                    }
+                }
+                else
                 {
-                    state.mTest = true;
+                    state.mTest = false;
                 }
-            }
-            break;
+                break;
+            case (MachineState::LEFT) :
+                if(currCol > mParam-1){
+                    if(ZomWorld::get().GetGrid(currRow, currCol - mParam) == 1)
+                    {
+                        state.mTest = true;
+                    }
+                    else
+                    {
+                        state.mTest = false;
+                    }
+                }
+                else
+                {
+                    state.mTest = false;
+                }
+                break;
+        }
     }
     state.mProgramCounter++;
 }
@@ -234,6 +302,14 @@ void OpTestPassable::Execute(MachineState& state)
                 {
                     state.mTest = true;
                 }
+                else
+                {
+                    state.mTest = false;
+                }
+            }
+            else
+            {
+                state.mTest = false;
             }
             break;
         case (MachineState::RIGHT) :
@@ -243,6 +319,14 @@ void OpTestPassable::Execute(MachineState& state)
                 {
                     state.mTest = true;
                 }
+                else
+                {
+                    state.mTest = false;
+                }
+            }
+            else
+            {
+                state.mTest = false;
             }
             break;
         case (MachineState::DOWN) :
@@ -252,6 +336,14 @@ void OpTestPassable::Execute(MachineState& state)
                 {
                     state.mTest = true;
                 }
+                else
+                {
+                    state.mTest = false;
+                }
+            }
+            else
+            {
+                state.mTest = false;
             }
             break;
         case (MachineState::LEFT) :
@@ -261,6 +353,14 @@ void OpTestPassable::Execute(MachineState& state)
                 {
                     state.mTest = true;
                 }
+                else
+                {
+                    state.mTest = false;
+                }
+            }
+            else
+            {
+                state.mTest = false;
             }
             break;
     }
@@ -270,9 +370,253 @@ void OpTestPassable::Execute(MachineState& state)
 void OpRangedAttack::Execute(MachineState& state)
 {
     DebugOutput(state);
+    int currRow = state.mY / 30;
+    int currCol = state.mX / 30;
+    if(ZomWorld::get().GetGrid(currRow, currCol) == 2)
+    {
+        switch (state.mFacing)
+        {
+            case (MachineState::UP) :
+                if(state.mY > 30)
+                {
+                    if(ZomWorld::get().GetGrid(currRow - 2, currCol) != 0)
+                    {
+                        ZomWorld::get().KillAt(currRow - 2, currCol);
+                    }
+                }
+                break;
+            case (MachineState::RIGHT) :
+                if(state.mX < 540)
+                {
+                    if(ZomWorld::get().GetGrid(currRow, currCol + 2) != 0)
+                    {
+                        ZomWorld::get().KillAt(currRow, currCol + 2);
+                    }
+                }
+                break;
+            case (MachineState::DOWN) :
+                if(state.mY < 540)
+                {
+                    if(ZomWorld::get().GetGrid(currRow + 2, currCol) != 0)
+                    {
+                        ZomWorld::get().KillAt(currRow + 2, currCol);
+                    }
+                }
+                break;
+            case (MachineState::LEFT) :
+                if(state.mX > 30)
+                {
+                    if(ZomWorld::get().GetGrid(currRow, currCol - 2) != 0)
+                    {
+                        ZomWorld::get().KillAt(currRow, currCol - 2);
+                    }
+                }
+                break;
+        }
+    }
+    state.mProgramCounter++;
+    state.mActionsTaken++;
 }
 
+void OpAttack::Execute(MachineState& state)
+{
+    DebugOutput(state);
+    int currRow = state.mY / 30;
+    int currCol = state.mX / 30;
+    int curr = ZomWorld::get().GetGrid(currRow, currCol);
+    switch (state.mFacing)
+    {
+        case (MachineState::UP) :
+            if(state.mY > 0)
+            {
+                if(ZomWorld::get().GetGrid(currRow - 1, currCol) == 1)
+                {
+                    if(curr == 2)
+                    {
+                        ZomWorld::get().KillAt(currRow - 1, currCol);
+                    }
+                }
+                else if(ZomWorld::get().GetGrid(currRow - 1, currCol) == 2)
+                {
+                    if(curr == 1)
+                    {
+                        ZomWorld::get().TurnZombieAt(currRow - 1, currCol);
+                    }
+                    else if(curr == 2)
+                    {
+                        ZomWorld::get().KillAt(currRow - 1, currCol);
+                    }
+                }
+            }
+            break;
+        case (MachineState::RIGHT) :
+            if(state.mX < 570)
+            {
+                if(ZomWorld::get().GetGrid(currRow, currCol + 1) == 1)
+                {
+                    if(curr == 2)
+                    {
+                        ZomWorld::get().KillAt(currRow, currCol + 1);
+                    }
+                }
+                else if(ZomWorld::get().GetGrid(currRow, currCol + 1) == 2)
+                {
+                    if(curr == 1)
+                    {
+                        ZomWorld::get().TurnZombieAt(currRow, currCol + 1);
+                    }
+                    else if(curr == 2)
+                    {
+                        ZomWorld::get().KillAt(currRow, currCol + 1);
+                    }
+                }
+            }
+            break;
+        case (MachineState::DOWN) :
+            if(state.mY < 570)
+            {
+                if(ZomWorld::get().GetGrid(currRow + 1, currCol) == 1)
+                {
+                    if(curr == 2)
+                    {
+                        ZomWorld::get().KillAt(currRow + 1, currCol);
+                    }
+                }
+                else if(ZomWorld::get().GetGrid(currRow + 1, currCol) == 2)
+                {
+                    if(curr == 1)
+                    {
+                        ZomWorld::get().TurnZombieAt(currRow + 1, currCol);
+                    }
+                    else if(curr == 2)
+                    {
+                        ZomWorld::get().KillAt(currRow + 1, currCol);
+                    }
+                }
+            }
+            break;
+        case (MachineState::LEFT) :
+            if(state.mX > 0)
+            {
+                if(ZomWorld::get().GetGrid(currRow, currCol - 1) == 1)
+                {
+                    if(curr == 2)
+                    {
+                        ZomWorld::get().KillAt(currRow, currCol - 1);
+                    }
+                }
+                else if(ZomWorld::get().GetGrid(currRow, currCol - 1) == 2)
+                {
+                    if(curr == 1)
+                    {
+                        ZomWorld::get().TurnZombieAt(currRow, currCol - 1);
+                    }
+                    else if(curr == 2)
+                    {
+                        ZomWorld::get().KillAt(currRow, currCol - 1);
+                    }
+                }
+            }
+            break;
+    }
+    state.mProgramCounter++;
+    state.mActionsTaken++;
+}
 
+void OpEndTurn::Execute(MachineState& state)
+{
+    DebugOutput(state);
+    state.mProgramCounter++;
+    state.mActionsTaken++;
+}
 
+void OpTestHuman::Execute(MachineState& state)
+{
+    DebugOutput(state);
+    int currRow = state.mY / 30;
+    int currCol = state.mX / 30;
+    switch (state.mFacing)
+    {
+        case (MachineState::UP) :
+            if(currRow > mParam - 1){
+                if(ZomWorld::get().GetGrid(currRow - mParam, currCol) == 2)
+                {
+                    state.mTest = true;
+                }
+                else
+                {
+                    state.mTest = false;
+                }
+            }
+            else
+            {
+                state.mTest = false;
+            }
+            break;
+        case (MachineState::RIGHT) :
+            if(currCol < 20-mParam){
+                if(ZomWorld::get().GetGrid(currRow, currCol + mParam) == 2)
+                {
+                    state.mTest = true;
+                }
+                else
+                {
+                    state.mTest = false;
+                }
+            }
+            else
+            {
+                state.mTest = false;
+            }
+            break;
+        case (MachineState::DOWN) :
+            if(currRow < 20-mParam){
+                if(ZomWorld::get().GetGrid(currRow + mParam, currCol) == 2)
+                {
+                    state.mTest = true;
+                }
+                else
+                {
+                    state.mTest = false;
+                }
+            }
+            else
+            {
+                state.mTest = false;
+            }
+            break;
+        case (MachineState::LEFT) :
+            if(currCol > mParam-1){
+                if(ZomWorld::get().GetGrid(currRow, currCol - mParam) == 2)
+                {
+                    state.mTest = true;
+                }
+                else
+                {
+                    state.mTest = false;
+                }
+            }
+            else
+            {
+                state.mTest = false;
+            }
+            break;
+    }
+    state.mProgramCounter++;
+}
 
-
+void OpJne::Execute(MachineState& state)
+{
+    DebugOutput(state);
+    if(mParam <= state.mNumOps)
+    {
+        if(!state.mTest)
+        {
+            state.mProgramCounter = mParam;
+        }
+        else
+        {
+            state.mProgramCounter++;
+        }
+    }
+}

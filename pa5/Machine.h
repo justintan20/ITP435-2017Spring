@@ -37,9 +37,11 @@ struct MachineState
 	Facing mFacing;
 	// Test flag for branches
 	bool mTest;
+    //coordinates
     int mX;
     int mY;
-
+    //number of ops
+    int mNumOps;
 	int GetActionsPerTurn() const noexcept { return mActionsPerTurn; }
 	bool GetInfect() const noexcept { return mInfectOnAttack; }
 private:
@@ -58,11 +60,16 @@ public:
 	void LoadMachine(const std::string& filename);
 
 	// Given the state, binds the trait parameters to it
-	void BindState(MachineState& state);
+	void BindState(MachineState& state) noexcept;
 
 	// Take a turn using this logic for the passed in state
 	void TakeTurn(MachineState& state);
-
+    
+    //set the vector of ops
+    void SetOps(std::vector<std::shared_ptr<Op>> ops) noexcept;
+    
+    //get the vector of ops
+    std::vector<std::shared_ptr<Op>> GetOps() const noexcept;
 	// Destructor
 	~Machine();
 private:
@@ -140,7 +147,35 @@ void Machine<MachineTraits>::LoadMachine(const std::string& filename)
             {
                 mOps.push_back(std::make_shared<OpTestPassable>());
             }
+            else if(opStr.compare("ranged_attack") == 0)
+            {
+                mOps.push_back(std::make_shared<OpRangedAttack>());
+            }
+            else if(opStr.compare("attack") == 0)
+            {
+                mOps.push_back(std::make_shared<OpAttack>());
+            }
+            else if(opStr.compare("endturn") == 0)
+            {
+                mOps.push_back(std::make_shared<OpEndTurn>());
+            }
+            else if(opStr.compare("test_human") == 0)
+            {
+                mOps.push_back(std::make_shared<OpTestHuman>(num));
+            }
+            else if(opStr.compare("jne") == 0)
+            {
+                mOps.push_back(std::make_shared<OpJne>(num));
+            }
+            else
+            {
+                throw InvalidOp();
+            }
         }
+    }
+    else
+    {
+        throw InvalidOp();
     }
 //	mOps.push_back(std::make_shared<OpRotate>(0));
 //	mOps.push_back(std::make_shared<OpRotate>(0));
@@ -151,10 +186,11 @@ void Machine<MachineTraits>::LoadMachine(const std::string& filename)
 }
 
 template <typename MachineTraits>
-void Machine<MachineTraits>::BindState(MachineState& state)
+void Machine<MachineTraits>::BindState(MachineState& state) noexcept
 {
 	state.mActionsPerTurn = MachineTraits::ACTIONS_PER_TURN;
 	state.mInfectOnAttack = MachineTraits::INFECT_ON_ATTACK;
+    state.mNumOps = static_cast<int>(mOps.size());
 }
 
 template <typename MachineTraits>
@@ -164,7 +200,14 @@ void Machine<MachineTraits>::TakeTurn(MachineState& state)
 	state.mActionsTaken = 0;
 	while (state.mActionsTaken < MachineTraits::ACTIONS_PER_TURN)
 	{
-		mOps.at(state.mProgramCounter - 1)->Execute(state);
+        try
+        {
+            mOps.at(state.mProgramCounter - 1)->Execute(state);
+        }
+        catch(std::exception e)
+        {
+            throw InvalidOp();
+        }
 	}
 }
 
@@ -172,4 +215,16 @@ template <typename MachineTraits>
 Machine<MachineTraits>::~Machine()
 {
 	mOps.clear();
+}
+
+template <typename MachineTraits>
+std::vector<std::shared_ptr<Op>> Machine<MachineTraits>::GetOps() const noexcept
+{
+    return mOps;
+}
+
+template <typename MachineTraits>
+void Machine<MachineTraits>::SetOps(std::vector<std::shared_ptr<Op>> ops) noexcept
+{
+    mOps = ops;
 }

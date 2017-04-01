@@ -1,0 +1,22 @@
+test_human,2; This zombie runs away from humans
+je,13
+test_human,1; but can attack sometimes
+je,19
+test_passable
+je,21
+test_random
+je,11
+rotate,0
+goto,1
+rotate,1
+goto,1
+test_random
+je,17
+rotate,0
+goto,1
+rotate,1
+goto,1
+attack
+goto,1
+forward
+goto,1
