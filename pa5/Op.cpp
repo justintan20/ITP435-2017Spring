@@ -5,7 +5,7 @@
 #include "ZomWorld.h"
 
 // Output state information for debugging purposes
-void Op::DebugOutput(MachineState& state)
+void Op::DebugOutput(MachineState& state) noexcept
 {
 	std::cout << state.mProgramCounter << ":" << mOpName << "," << mParam << std::endl;
     std::cout << "X: " << state.mX << "      Y: " << state.mY << std::endl;
