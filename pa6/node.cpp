@@ -8,11 +8,12 @@ void NBlock::AddStatement(NStatement* statement)
 
 void NBlock::CodeGen(CodeContext& context) const
 {
-	// TODO: Loop through statements in list and code gen them
+	// Loop through statements in list and code gen them
     for(auto const& i : mStatements)
     {
         i->CodeGen(context);
     }
+    //check if is main block
     if(mbMainBlock)
     {
         context.mOps.push_back("goto,1");

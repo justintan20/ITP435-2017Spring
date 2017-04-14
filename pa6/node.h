@@ -25,7 +25,7 @@ public:
 	virtual void CodeGen(CodeContext& context) const override { }
 };
 
-//NStatement
+//NStatements
 class NStatement : public Node
 {
 };
@@ -60,7 +60,7 @@ public:
     virtual void CodeGen(CodeContext& context) const override;
 };
 
-//NBoolean
+//NBooleans
 class NBoolean : public Node
 {
 };
@@ -97,6 +97,7 @@ private:
     NNumeric* mNum;
 };
 
+//NBlock
 class NBlock : public Node
 {
 public:
@@ -109,6 +110,7 @@ private:
 	bool mbMainBlock;
 };
 
+//NIfElse is a NStatement
 class NIfElse : public NStatement
 {
 public:

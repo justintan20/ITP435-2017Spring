@@ -15,13 +15,16 @@ extern NBlock* g_MainBlock;
 extern int zompilerparse();
 extern FILE* zompilerin;
 
+//function to optimize gotos
 int optimize(CodeContext& context, std::pair<int, int> pair)
 {
+    //check if links
     if(context.mGotos.find(pair.second) != context.mGotos.end())
     {
         std::pair<int, int> pair2;
         pair2.first = pair.first;
         pair2.second = context.mGotos.find(pair.second)->second;
+        //use recursion to find till end
         return optimize(context, pair2);
     }
     else
@@ -34,10 +37,9 @@ int main(int argc, char* argv[])
 {
 	// Read input from the first command line parameter
 	zompilerin = fopen(argv[1], "r");
-	
 	// Start the parse
 	zompilerparse();
-	// TODO: CodeGen from g_MainBlock
+	// CodeGen from g_MainBlock
     CodeContext myContext;
     if(g_MainBlock != nullptr)
     {
@@ -45,6 +47,7 @@ int main(int argc, char* argv[])
     }
 	// Close the file stream
 	fclose(zompilerin);
+    //optimize all gotos
     for(auto i : myContext.mGotos)
     {
         if(myContext.mGotos.find(i.second) != myContext.mGotos.end())
@@ -54,6 +57,7 @@ int main(int argc, char* argv[])
             myContext.mOps[i.first - 1] = "goto," + std::to_string(opitmizedGoto);
         }
     }
+    //output file
     std::ofstream output("out.zom");
     for(int i = 0; i < myContext.mOps.size(); i++)
     {

@@ -47,10 +47,11 @@ main_loop	: TMAIN TLBRACE block TRBRACE { g_MainBlock = $3;
 
 block		: statement { $$ = new NBlock();
                         ($$)->AddStatement($1); }
-/* TODO: Add support for multiple statements in a block */
+/* Add support for multiple statements in a block */
             | block statement { ($1)->AddStatement($2); }
 ;
 
+//statements
 statement	: rotate TSEMI
             | forward TSEMI
             | ifElse
@@ -58,6 +59,7 @@ statement	: rotate TSEMI
             | rangedAttack TSEMI
 ;
 
+//booleans
 boolean     : isHuman
             | isPassable
             | isRandom
