@@ -28,31 +28,70 @@ NBlock* g_MainBlock = nullptr;
 /* Terminal symbols */
 %token <string> TINTEGER
 %token <token> TLBRACE TRBRACE TSEMI TLPAREN TRPAREN
-%token <token> TMAIN TROTATE
+%token <token> TMAIN TROTATE TFORWARD TIF TELSE TATTACK TRANGED_ATTACK
+%token <token> TIS_HUMAN TIS_PASSABLE TIS_RANDOM TIS_ZOMBIE
 
 /* Statements */
 %type <block> main_loop block
-%type <statement> statement rotate
- 
+%type <statement> statement rotate forward ifElse attack rangedAttack
+%type <boolean> boolean isHuman isPassable isRandom isZombie
+
 /* Expressions */
 %type <numeric> numeric
 
 %%
 
-main_loop	: TMAIN TLBRACE block TRBRACE { std::cout << "Main entry point found!" << std::endl; }
+main_loop	: TMAIN TLBRACE block TRBRACE { g_MainBlock = $3;
+                                            g_MainBlock->SetMainBlock();}
 ;
 
-block		: statement { std::cout << "Single statement" << std::endl; }
+block		: statement { $$ = new NBlock();
+                        ($$)->AddStatement($1); }
 /* TODO: Add support for multiple statements in a block */
+            | block statement { ($1)->AddStatement($2); }
 ;
 
 statement	: rotate TSEMI
+            | forward TSEMI
+            | ifElse
+            | attack TSEMI
+            | rangedAttack TSEMI
+;
+
+boolean     : isHuman
+            | isPassable
+            | isRandom
+            | isZombie
 ;
 			
-rotate		: TROTATE TLPAREN numeric TRPAREN { std::cout << "Rotate command" << std::endl; }
+rotate		: TROTATE TLPAREN numeric TRPAREN { $$ = new NRotate($3); }
+;
+
+forward     : TFORWARD TLPAREN TRPAREN { $$ = new NForward(); }
+;
+
+ifElse      : TIF TLPAREN boolean TRPAREN TLBRACE block TRBRACE TELSE TLBRACE block TRBRACE { $$ = new NIfElse(($3),($6),($10)); }
+;
+
+attack      : TATTACK TLPAREN TRPAREN { $$ = new NAttack(); }
+;
+
+isHuman     : TIS_HUMAN TLPAREN numeric TRPAREN { $$ = new NIsHuman($3); }
+;
+
+isPassable  : TIS_PASSABLE TLPAREN TRPAREN { $$ = new NIsPassable(); }
+;
+
+isRandom    : TIS_RANDOM TLPAREN TRPAREN { $$ = new NIsRandom(); }
+;
+
+isZombie    : TIS_ZOMBIE TLPAREN numeric TRPAREN { $$ = new NIsZombie($3); }
+;
+
+rangedAttack: TRANGED_ATTACK TLPAREN TRPAREN { $$ = new NRangedAttack(); }
 ;
 			
-numeric		: TINTEGER { std::cout << "Numeric value of " << *($1) << std::endl; }
+numeric		: TINTEGER { $$ = new NNumeric(*($1)); }
 ;
 
 %%

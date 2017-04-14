@@ -65,6 +65,26 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "input/basic.zc"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "input/two_statements.zc"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "input/stationary.zc"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "input/search.zc"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "input/michonne.zc"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "input/the_governor.zc"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

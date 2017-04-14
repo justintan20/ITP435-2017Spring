@@ -8,6 +8,7 @@
 struct CodeContext
 {
 	std::vector<std::string> mOps;
+    std::map<int, int> mGotos;
 };
 
 class Node
@@ -24,6 +25,7 @@ public:
 	virtual void CodeGen(CodeContext& context) const override { }
 };
 
+//NStatement
 class NStatement : public Node
 {
 };
@@ -37,8 +39,62 @@ private:
 	NNumeric* mDir;
 };
 
+class NForward : public NStatement
+{
+public:
+    NForward();
+    virtual void CodeGen(CodeContext& context) const override;
+};
+
+class NAttack : public NStatement
+{
+public:
+    NAttack();
+    virtual void CodeGen(CodeContext& context) const override;
+};
+
+class NRangedAttack : public NStatement
+{
+public:
+    NRangedAttack();
+    virtual void CodeGen(CodeContext& context) const override;
+};
+
+//NBoolean
 class NBoolean : public Node
 {
+};
+
+class NIsHuman : public NBoolean
+{
+public:
+    NIsHuman(NNumeric* num);
+    virtual void CodeGen(CodeContext& context) const override;
+private:
+    NNumeric* mNum;
+};
+
+class NIsPassable : public NBoolean
+{
+public:
+    NIsPassable();
+    virtual void CodeGen(CodeContext& context) const override;
+};
+
+class NIsRandom : public NBoolean
+{
+public:
+    NIsRandom();
+    virtual void CodeGen(CodeContext& context) const override;
+};
+
+class NIsZombie : public NBoolean
+{
+public:
+    NIsZombie(NNumeric* num);
+    virtual void CodeGen(CodeContext& context) const override;
+private:
+    NNumeric* mNum;
 };
 
 class NBlock : public Node
@@ -51,4 +107,15 @@ public:
 private:
 	std::list<NStatement*> mStatements;
 	bool mbMainBlock;
+};
+
+class NIfElse : public NStatement
+{
+public:
+    NIfElse(NBoolean* boolean, NBlock* ifBlock, NBlock* elseBlock);
+    virtual void CodeGen(CodeContext& context) const override;
+private:
+    NBoolean* mBool;
+    NBlock* mIfBlock;
+    NBlock* mElseBlock;
 };

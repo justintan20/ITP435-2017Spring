@@ -31,7 +31,17 @@ int g_LineNumber = 1;
 "("						{ return TOKEN(TLPAREN); }
 ")"						{ return TOKEN(TRPAREN); }
 
+\/\/.*"\n"              { g_LineNumber++;}
 "rotate"				{ return TOKEN(TROTATE); }
+"forward"               { return TOKEN(TFORWARD); }
+"if"                    { return TOKEN(TIF); }
+"else"                  { return TOKEN(TELSE); }
+"is_human"              { return TOKEN(TIS_HUMAN); }
+"attack"                { return TOKEN(TATTACK); }
+"is_passable"           { return TOKEN(TIS_PASSABLE); }
+"is_random"             { return TOKEN(TIS_RANDOM); }
+"is_zombie"             { return TOKEN(TIS_ZOMBIE); }
+"ranged_attack"         { return TOKEN(TRANGED_ATTACK); }
 
 %{
 /* Do not add any of your own tokens below this line!!!! */
